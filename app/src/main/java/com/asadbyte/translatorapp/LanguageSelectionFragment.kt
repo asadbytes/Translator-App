@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.asadbyte.translatorapp.databinding.FragmentLanguageSelectionBinding
 
@@ -13,6 +14,7 @@ class LanguageSelectionFragment : Fragment() {
 
     private var _binding: FragmentLanguageSelectionBinding? = null
     private val binding get() = _binding!!
+    private val args: LanguageSelectionFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,6 +27,11 @@ class LanguageSelectionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (args.isForUser2) {
+            // If it's for User 2, rotate the entire fragment's view by 180 degrees
+            binding.root.rotation = 180f
+        }
 
         // --- SETUP RECYCLERVIEW ---
         setupRecyclerView()

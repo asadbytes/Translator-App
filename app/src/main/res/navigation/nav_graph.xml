@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_languageSelectionFragment"
             app:destination="@id/languageSelectionFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_messageFragment"
+            app:destination="@id/messageFragment" />
     </fragment>
 
     <!-- Destination for your Language Selection Screen -->
@@ -23,6 +26,25 @@
         android:id="@+id/languageSelectionFragment"
         android:name="com.asadbyte.translatorapp.LanguageSelectionFragment"
         android:label="fragment_language_selection"
-        tools:layout="@layout/fragment_language_selection" />
+        tools:layout="@layout/fragment_language_selection" >
+        <argument
+            android:name="isForUser2"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.asadbyte.translatorapp.MessageFragment"
+        android:label="fragment_message"
+        tools:layout="@layout/fragment_message"
+        >
+        <action
+            android:id="@+id/action_messageFragment_to_languageSelectionFragment"
+            app:destination="@id/languageSelectionFragment" />
+        <action
+            android:id="@+id/action_messageFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 
 </navigation>

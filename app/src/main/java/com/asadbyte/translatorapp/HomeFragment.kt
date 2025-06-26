@@ -27,6 +27,11 @@ class HomeFragment : Fragment() {
         // Find the button inside the included layout
         val leftButton = binding.leftButton
         val rightButton = binding.rightButton
+        val messageIcon = binding.bottomNavigation.findViewById<View>(R.id.bottom_nav_message)
+
+        messageIcon.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_messageFragment)
+        }
 
         rightButton.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_languageSelectionFragment)
