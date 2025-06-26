@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_homeFragment_to_messageFragment"
             app:destination="@id/messageFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 
     <!-- Destination for your Language Selection Screen -->
@@ -33,6 +36,7 @@
             app:argType="boolean" />
     </fragment>
 
+    <!--  Destination for your Message Screen  -->
     <fragment
         android:id="@+id/messageFragment"
         android:name="com.asadbyte.translatorapp.MessageFragment"
@@ -47,4 +51,14 @@
             app:destination="@id/homeFragment" />
     </fragment>
 
+    <!--  Destination for your Settings Screen  -->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.asadbyte.translatorapp.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
