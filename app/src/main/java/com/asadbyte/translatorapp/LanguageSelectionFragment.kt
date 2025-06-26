@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.asadbyte.translatorapp.databinding.FragmentLanguageSelectionBinding
 
 class LanguageSelectionFragment : Fragment() {
@@ -13,7 +14,11 @@ class LanguageSelectionFragment : Fragment() {
     private var _binding: FragmentLanguageSelectionBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentLanguageSelectionBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -21,15 +26,43 @@ class LanguageSelectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // --- SETUP RECYCLERVIEW ---
+        setupRecyclerView()
+        // --------------------------
+
         // The fragment's own back button
         val backIcon = binding.backIcon
-
         backIcon.setOnClickListener {
-            // Simply pop the back stack to go back to the previous fragment (Home)
             findNavController().popBackStack()
         }
+    }
 
-        // ... setup your RecyclerView etc.
+    private fun setupRecyclerView() {
+        // 1. Create your dummy list of languages
+        val languageList = listOf(
+            Language("English"),
+            Language("Español (Spanish)"),
+            Language("Français (French)"),
+            Language("Deutsch (German)"),
+            Language("Italiano (Italian)"),
+            Language("Português (Portuguese)"),
+            Language("Русский (Russian)"),
+            Language("中文 (Chinese)"),
+            Language("日本語 (Japanese)"),
+            Language("한국어 (Korean)"),
+            Language("العربية (Arabic)"),
+            Language("हिन्दी (Hindi)"),
+            Language("اردو (Urdu)")
+        )
+
+        // 2. Create an instance of the adapter
+        val languageAdapter = LanguageAdapter(languageList)
+
+        // 3. Set the Layout Manager and Adapter for the RecyclerView
+        binding.languageRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = languageAdapter
+        }
     }
 
     override fun onDestroyView() {
