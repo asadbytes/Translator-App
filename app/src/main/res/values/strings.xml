@@ -3,4 +3,11 @@
     <string name="settings">settings</string>
     <string name="quick_translator">Quick Translator</string>
     <string name="quick_translator_desc">Using Floating icon Translate chat, Text, picture, full screen text, video/game sub-titles and more.</string>
+    <string name="back_button">back button</string>
+    <string name="search_button">search button</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="select_language">Select Language</string>
 </resources>

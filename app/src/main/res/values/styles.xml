@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="ShapeAppearance.App.LessRoundedButton" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">8dp</item> <!-- Adjust this value for more/less rounding -->
@@ -7,5 +8,10 @@
 
     <style name="Widget.App.Button.LessRounded" parent="Widget.MaterialComponents.Button">
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.App.LessRoundedButton</item>
+    </style>
+
+    <style name="Widget.Theme.TranslatorApp.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 </resources>
