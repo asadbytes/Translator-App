@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- res/navigation/nav_graph.xml -->
+<?xml version="1.0" encoding="utf-8"?><!-- res/navigation/nav_graph.xml -->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,7 +10,7 @@
         android:id="@+id/homeFragment"
         android:name="com.asadbyte.translatorapp.main.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <!-- An "action" defines a navigation path -->
         <action
             android:id="@+id/action_homeFragment_to_languageSelectionFragment"
@@ -29,7 +28,7 @@
         android:id="@+id/languageSelectionFragment"
         android:name="com.asadbyte.translatorapp.language.LanguageSelectionFragment"
         android:label="fragment_language_selection"
-        tools:layout="@layout/fragment_language_selection" >
+        tools:layout="@layout/fragment_language_selection">
         <argument
             android:name="isForUser2"
             android:defaultValue="false"
@@ -41,8 +40,7 @@
         android:id="@+id/messageFragment"
         android:name="com.asadbyte.translatorapp.MessageFragment"
         android:label="fragment_message"
-        tools:layout="@layout/fragment_message"
-        >
+        tools:layout="@layout/fragment_message">
         <action
             android:id="@+id/action_messageFragment_to_languageSelectionFragment"
             app:destination="@id/languageSelectionFragment" />
@@ -63,6 +61,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_bookmarkFragment"
             app:destination="@id/bookmarkFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
     </fragment>
 
     <fragment
@@ -74,4 +75,16 @@
             android:id="@+id/action_bookmarkFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.asadbyte.translatorapp.history.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history">
+        <action
+            android:id="@+id/action_historyFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+
 </navigation>

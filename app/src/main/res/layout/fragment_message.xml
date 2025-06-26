@@ -175,7 +175,7 @@
                 android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:text="@string/English"
+                android:text="@string/english"
                 android:contentDescription="Language Button"
                 />
 

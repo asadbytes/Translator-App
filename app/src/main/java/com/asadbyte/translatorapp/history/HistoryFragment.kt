@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.bookmark
+package com.asadbyte.translatorapp.history
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,18 +8,18 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.asadbyte.translatorapp.databinding.FragmentBookmarkBinding
+import com.asadbyte.translatorapp.databinding.FragmentHistoryBinding
 
-class BookmarkFragment : Fragment() {
+class HistoryFragment : Fragment() {
 
-    private var _binding: FragmentBookmarkBinding? = null
+    private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentBookmarkBinding.inflate(inflater, container, false)
+        _binding = FragmentHistoryBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -34,16 +34,16 @@ class BookmarkFragment : Fragment() {
         // --- Setup RecyclerView ---
 
         // 1. Create sample data. In a real app, you would fetch this from a database.
-        val sampleBookmarks = listOf(
-            Bookmark(1, "ہیلو آپ کیسے ہیں؟", "Hello how are you?"),
-            Bookmark(2, "آپ کا نام کیا ہے؟", "What is your name?"),
-            Bookmark(3, "میں ٹھیک ہوں شکریہ", "I am fine, thank you"),
-            Bookmark(4, "یہ کتنے کا ہے؟", "How much is this?"),
-            Bookmark(5, "الوداع", "Goodbye")
+        val sampleHistorys = listOf(
+            History(1, "ہیلو آپ کیسے ہیں؟", "Hello how are you?", "Urdu"),
+            History(2, "آپ کا نام کیا ہے؟", "What is your name?", "Urdu"),
+            History(3, "میں ٹھیک ہوں شکریہ", "I am fine, thank you", "Urdu"),
+            History(4, "یہ کتنے کا ہے؟", "How much is this?", "Urdu"),
+            History(5, "الوداع", "Goodbye", "Urdu")
         )
 
         // 2. Create an instance of your adapter
-        val bookmarksAdapter = BookmarksAdapter(sampleBookmarks,
+        val bookmarksAdapter = HistoryAdapter(sampleHistorys,
             onItemClicked = { bookmark ->
                 // This code runs when a user taps on any part of the card
                 Toast.makeText(requireContext(), "Tapped on: ${bookmark.translatedText}", Toast.LENGTH_SHORT).show()
@@ -56,7 +56,7 @@ class BookmarkFragment : Fragment() {
         )
 
         // 3. Configure the RecyclerView
-        binding.bookmarkRecyclerView.apply {
+        binding.historyRecyclerView.apply {
             // A LayoutManager is required for a RecyclerView to function
             layoutManager = LinearLayoutManager(requireContext())
             adapter = bookmarksAdapter

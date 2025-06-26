@@ -12,7 +12,7 @@
     <string name="select_language">Select Language</string>
     <string name="conversation">Conversation</string>
     <string name="conversation_icon">conversation icon</string>
-    <string name="English">English</string>
+    <string name="english">English</string>
     <string name="urdu">Urdu</string>
     <string name="setting">Setting</string>
     <string name="quick_icon">quick ui icon</string>
@@ -21,4 +21,7 @@
     <string name="go_inside">Open this setting</string>
     <string name="bookmark">Bookmark</string>
     <string name="bookmark_description">Bookmark description</string>
+    <string name="history">History</string>
+    <string name="kebab_menu">kebab menu icon</string>
+    <string name="selected_language">Selected Language</string>
 </resources>

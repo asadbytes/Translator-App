@@ -8,7 +8,7 @@
 
     <!-- Top App Bar -->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/bookmarkTopBarLayout"
+        android:id="@+id/historyTopBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent">
@@ -46,10 +46,23 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="16dp"
                     android:layout_toEndOf="@id/back_icon"
-                    android:text="@string/bookmark"
+                    android:text="@string/history"
                     android:textColor="@android:color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <!-- Search Icon -->
+                <ImageView
+                    android:id="@+id/kebab_menu_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@string/kebab_menu"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_kebab_menu" />
+
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
@@ -58,13 +71,13 @@
 
     <!-- List of Languages -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/bookmark_recycler_view"
+        android:id="@+id/history_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bookmarkTopBarLayout"
-        tools:listitem="@layout/list_item_bookmark" />
+        app:layout_constraintTop_toBottomOf="@id/historyTopBarLayout"
+        tools:listitem="@layout/list_item_history" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

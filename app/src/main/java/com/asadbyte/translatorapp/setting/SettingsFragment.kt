@@ -40,7 +40,7 @@ class SettingsFragment : Fragment() {
                     // Navigation Actions
                     "language" -> Toast.makeText(context, "Clicked on ${setting.heading}", Toast.LENGTH_SHORT).show()
                     "bookmark" -> findNavController().navigate(R.id.action_settingsFragment_to_bookmarkFragment)
-                    "history" -> Toast.makeText(context, "Clicked on ${setting.heading}", Toast.LENGTH_SHORT).show()
+                    "history" -> findNavController().navigate(R.id.action_settingsFragment_to_historyFragment)
 
                     // Intent-based Actions (don't navigate within the app)
                     "rate" -> Toast.makeText(context, "Clicked on ${setting.heading}", Toast.LENGTH_SHORT).show()
