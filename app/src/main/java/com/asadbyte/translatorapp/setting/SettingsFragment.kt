@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp
+package com.asadbyte.translatorapp.setting
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
@@ -28,18 +29,35 @@ class SettingsFragment : Fragment() {
 
         val backButton = binding.backIcon
         backButton.setOnClickListener {
-            findNavController().navigate(R.id.action_settingsFragment_to_homeFragment)
+            findNavController().navigateUp()
         }
         val settingsData = createSettingsList()
 
         val settingsAdapter = SettingsAdapter(settingsData,
             onItemClick = { setting ->
-                // Handle click for all items, e.g., navigate to a new screen
-                Toast.makeText(context, "${setting.heading} clicked", Toast.LENGTH_SHORT).show()
-                // Example navigation:
-                // if (setting.id == "language") {
-                //     findNavController().navigate(R.id.action_to_language_selection)
-                // }
+                // --- THIS IS THE LOGIC YOU NEED TO ADD ---
+                when (setting.id) {
+                    // Navigation Actions
+                    "language" -> Toast.makeText(context, "Clicked on ${setting.heading}", Toast.LENGTH_SHORT).show()
+                    "bookmark" -> findNavController().navigate(R.id.action_settingsFragment_to_bookmarkFragment)
+                    "history" -> Toast.makeText(context, "Clicked on ${setting.heading}", Toast.LENGTH_SHORT).show()
+
+                    // Intent-based Actions (don't navigate within the app)
+                    "rate" -> Toast.makeText(context, "Clicked on ${setting.heading}", Toast.LENGTH_SHORT).show()
+                    "share" -> Toast.makeText(context, "Clicked on ${setting.heading}", Toast.LENGTH_SHORT).show()
+
+                    // Clicks that might open a dialog or do nothing yet
+                    "support", "about" -> {
+                        Toast.makeText(context, "Clicked on ${setting.heading}", Toast.LENGTH_SHORT).show()
+                    }
+
+                    // The switch items probably don't need a row click action,
+                    // as their action is the switch itself. But you could add one if needed.
+                    "theme", "offline" -> {
+                        // You can toggle the switch programmatically on row click if you want
+                        // Or just let the switch handle the click itself.
+                    }
+                }
             },
             onSwitchCheckedChange = { setting, isChecked ->
                 // Handle switch state change

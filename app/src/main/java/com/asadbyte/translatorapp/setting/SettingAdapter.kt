@@ -1,11 +1,11 @@
-package com.asadbyte.translatorapp
+package com.asadbyte.translatorapp.setting
 
 // SettingsAdapter.kt
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.asadbyte.translatorapp.databinding.ListItemSettingSimpleBinding // Import your generated binding
-import com.asadbyte.translatorapp.databinding.ListItemSettingSwitchBinding // Import your generated binding
+import com.asadbyte.translatorapp.databinding.ListItemSettingSimpleBinding
+import com.asadbyte.translatorapp.databinding.ListItemSettingSwitchBinding
 
 class SettingsAdapter(
     private val settingsList: List<SettingItem>,

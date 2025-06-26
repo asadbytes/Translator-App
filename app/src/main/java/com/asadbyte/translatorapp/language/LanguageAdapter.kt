@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp
+package com.asadbyte.translatorapp.language
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.asadbyte.translatorapp.R
 
 // 1. Data class to hold the language information
 data class Language(val name: String)

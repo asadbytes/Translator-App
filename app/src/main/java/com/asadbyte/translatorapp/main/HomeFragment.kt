@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp
+package com.asadbyte.translatorapp.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
