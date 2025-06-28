@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/page_background"
+    >
+
+    <!-- Top App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/translationTopBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/original_text_container"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            android:elevation="4dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
+
+                <!-- Back Icon -->
+                <ImageView
+                    android:id="@+id/back_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/back_button"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_back" />
+
+                <!-- Title Text -->
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_toEndOf="@id/back_icon"
+                    android:text="@string/translator"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/original_text_container"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/edittext_background"
+        android:elevation="2dp"
+        android:paddingHorizontal="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/translationTopBarLayout"
+        app:layout_constraintBottom_toTopOf="@id/translated_text_container"
+        >
+
+        <TextView
+            android:id="@+id/original_text_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:padding="6dp"
+            android:text="Original Text"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/original_cross_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Clear text"
+            android:padding="8dp"
+            android:src="@drawable/ic_cross"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@android:color/darker_gray"
+            tools:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/pencil_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Edit text"
+            android:padding="8dp"
+            android:src="@drawable/ic_pencil"
+            app:tint="@android:color/darker_gray"
+            app:layout_constraintEnd_toStartOf="@+id/original_cross_button"
+            app:layout_constraintTop_toTopOf="@+id/original_cross_button"
+            app:layout_constraintBottom_toBottomOf="@+id/original_cross_button"/>
+
+        <EditText
+            android:id="@+id/text_input_area"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="48dp"
+            android:background="@null"
+            android:gravity="top|start"
+            android:text="@string/original_text"
+            android:inputType="textMultiLine"
+            android:padding="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/original_text_indicator" />
+
+        <ImageView
+            android:id="@+id/copy_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginBottom="18dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Copy original text"
+            android:padding="8dp"
+            android:src="@drawable/ic_copy"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@android:color/darker_gray" />
+
+        <View
+            android:id="@+id/vertical_divider"
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/copy_icon"
+            app:layout_constraintStart_toEndOf="@+id/copy_icon"
+            app:layout_constraintTop_toTopOf="@+id/copy_icon" />
+
+        <ImageView
+            android:id="@+id/speaker_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Read original text aloud"
+            android:padding="8dp"
+            android:src="@drawable/ic_speaker_gray_simple"
+            app:layout_constraintBottom_toBottomOf="@+id/copy_icon"
+            app:layout_constraintStart_toEndOf="@+id/vertical_divider"
+            app:layout_constraintTop_toTopOf="@+id/copy_icon"
+            app:tint="@android:color/darker_gray" />
+
+        <Button
+            android:id="@+id/translate_button"
+            style="@style/Widget.App.Button.LessRounded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="12dp"
+            android:backgroundTint="@color/sky_blue"
+            android:text="Translate"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/translated_text_container"
+        android:layout_width="0dp"
+        android:layout_height="220dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/edittext_background"
+        android:elevation="2dp"
+        android:paddingHorizontal="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/original_text_container">
+
+        <TextView
+            android:id="@+id/translated_text_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:padding="6dp"
+            android:text="Translated Text"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_output_area"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="48dp"
+            android:gravity="top|start"
+            android:padding="12dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/translated_text_indicator"
+            tools:text="@string/arabic_text" />
+
+        <!-- Group of icons in the Bottom-Left Corner -->
+        <ImageView
+            android:id="@+id/translated_copy_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginBottom="18dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/copy_translated_text"
+            android:padding="8dp"
+            android:src="@drawable/ic_copy"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@android:color/darker_gray" />
+
+        <View
+            android:id="@+id/divider_1"
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/translated_copy_icon"
+            app:layout_constraintStart_toEndOf="@+id/translated_copy_icon"
+            app:layout_constraintTop_toTopOf="@+id/translated_copy_icon" />
+
+        <ImageView
+            android:id="@+id/expand_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Expand translated text view"
+            android:padding="8dp"
+            android:src="@drawable/ic_expand_to_full_screen"
+            app:layout_constraintBottom_toBottomOf="@+id/translated_copy_icon"
+            app:layout_constraintStart_toEndOf="@+id/divider_1"
+            app:layout_constraintTop_toTopOf="@+id/translated_copy_icon"
+            app:tint="@android:color/darker_gray" />
+
+        <View
+            android:id="@+id/divider_2"
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/translated_copy_icon"
+            app:layout_constraintStart_toEndOf="@+id/expand_icon"
+            app:layout_constraintTop_toTopOf="@+id/translated_copy_icon" />
+
+        <ImageView
+            android:id="@+id/bookmark_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Bookmark translation"
+            android:padding="8dp"
+            android:src="@drawable/ic_bookmark"
+            app:layout_constraintBottom_toBottomOf="@+id/translated_copy_icon"
+            app:layout_constraintStart_toEndOf="@+id/divider_2"
+            app:layout_constraintTop_toTopOf="@+id/translated_copy_icon"
+            app:tint="@android:color/darker_gray" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

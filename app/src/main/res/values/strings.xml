@@ -24,4 +24,12 @@
     <string name="history">History</string>
     <string name="kebab_menu">kebab menu icon</string>
     <string name="selected_language">Selected Language</string>
+    <string name="translation">Translation</string>
+    <string name="translator">Translator</string>
+    <string name="original_text">The best way to learn the English is to speak as much as you can, you need to learn something you must deeply go in the learning process...</string>
+    <string name="arabic_text">أفضل طريقة لتعلم اللغة الإنجليزية هي التحدث بقدر ما تستطيع فأنت بحاجة إلى تعلم شيء يجب أن تتعمق فيه في عملية التعلم</string>
+    <string name="translate_button">Translate button</string>
+    <string name="translate">Translate</string>
+    <string name="voice_input">Voice Input</string>
+    <string name="copy_translated_text">Copy translated text</string>
 </resources>

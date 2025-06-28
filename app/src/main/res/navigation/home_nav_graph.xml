@@ -21,6 +21,10 @@
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_translationFragment1"
+            app:destination="@+id/translationFragment1"
+            />
     </fragment>
 
     <!-- Destination for your Language Selection Screen -->
@@ -85,6 +89,27 @@
             android:id="@+id/action_historyFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/translationFragment1"
+        android:name="com.asadbyte.translatorapp.translation.TranslationFragment1"
+        android:label="translation_fragment1"
+        tools:layout="@layout/fragment_translation1"
+        >
+        <action
+            android:id="@+id/action_translationFragment1_to_translationFragment2"
+            app:destination="@+id/translationFragment2"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/translationFragment2"
+        android:name="com.asadbyte.translatorapp.translation.TranslationFragment2"
+        android:label="translation_fragment2"
+        tools:layout="@layout/fragment_translation2"
+        >
+    </fragment>
+
 
 
 </navigation>

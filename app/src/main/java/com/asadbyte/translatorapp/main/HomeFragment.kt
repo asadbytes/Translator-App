@@ -48,6 +48,10 @@ class HomeFragment : Fragment() {
             // This is how you navigate using the action defined in the graph
             findNavController().navigate(R.id.action_homeFragment_to_languageSelectionFragment)
         }
+
+        binding.homeTopbar.topBarTitle.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_translationFragment1)
+        }
     }
 
     override fun onDestroyView() {

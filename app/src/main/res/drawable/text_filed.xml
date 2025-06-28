@@ -1,0 +1,16 @@
+<!-- drawable/text_filed.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="390dp"
+    android:height="844dp"
+    android:viewportWidth="390"
+    android:viewportHeight="844">
+    <group>
+
+        <clip-path android:pathData="M30 0H360C376.569 0 390 13.4315 390 30V814C390 830.569 376.569 844 360 844H30C13.4315 844 0 830.569 0 814V30C0 13.4315 13.4315 0 30 0Z" />
+
+        <path
+            android:fillColor="#F0F6FF"
+            android:pathData="M0 0V844H390V0" />
+    </group>
+</vector>
