@@ -29,6 +29,7 @@ class HomeFragment : Fragment() {
         val leftButton = binding.leftButton
         val rightButton = binding.rightButton
         val messageIcon = binding.bottomNavigation.findViewById<View>(R.id.bottom_nav_message)
+        val cameraIcon = binding.bottomNavigation.findViewById<View>(R.id.bottom_nav_camera)
         val settingsIcon = binding.homeTopbar.topBarIcon
 
         settingsIcon.setOnClickListener {
@@ -51,6 +52,10 @@ class HomeFragment : Fragment() {
 
         binding.homeTopbar.topBarTitle.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_translationFragment1)
+        }
+
+        cameraIcon.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_cameraHomeFragment)
         }
     }
 

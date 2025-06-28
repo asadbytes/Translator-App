@@ -25,6 +25,10 @@
             android:id="@+id/action_homeFragment_to_translationFragment1"
             app:destination="@+id/translationFragment1"
             />
+        <action
+            android:id="@+id/action_homeFragment_to_cameraHomeFragment"
+            app:destination="@+id/cameraHomeFragment"
+            />
     </fragment>
 
     <!-- Destination for your Language Selection Screen -->
@@ -49,8 +53,13 @@
             android:id="@+id/action_messageFragment_to_languageSelectionFragment"
             app:destination="@id/languageSelectionFragment" />
         <action
-            android:id="@+id/action_messageFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_messageFragment_to_cameraHomeFragment"
+            app:destination="@+id/cameraHomeFragment"
+            />
+        <action
+            android:id="@+id/action_messageFragment_to_HomeFragment"
+            app:destination="@+id/homeFragment"
+            />
     </fragment>
 
     <!--  Destination for your Settings Screen  -->
@@ -110,6 +119,57 @@
         >
     </fragment>
 
+    <fragment
+        android:id="@+id/cameraHomeFragment"
+        android:name="com.asadbyte.translatorapp.camera.CameraHomeFragment"
+        android:label="camera_home_fragment"
+        tools:layout="@layout/fragment_camera_home"
+        >
+        <action
+            android:id="@+id/action_cameraHomeFragment_to_cameraCropFragment"
+            app:destination="@+id/cameraCropFragment"
+            />
+    </fragment>
 
+    <fragment
+        android:id="@+id/cameraCropFragment"
+        android:name="com.asadbyte.translatorapp.camera.CameraCropFragment"
+        android:label="fragment_camera_crop"
+        tools:layout="@layout/fragment_camera_crop" >
+        <argument
+            android:name="imageUri"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_cameraCropFragment_to_cameraResultFragment"
+            app:destination="@+id/cameraResultFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cameraResultFragment"
+        android:name="com.asadbyte.translatorapp.camera.CameraResultFragment"
+        android:label="fragment_camera_result"
+        tools:layout="@layout/fragment_camera_result" >
+        <argument
+            android:name="imageUri"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_cameraResultFragment_to_cameraCopyFragment"
+            app:destination="@+id/cameraCopyFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cameraCopyFragment"
+        android:name="com.asadbyte.translatorapp.camera.CameraCopyFragment"
+        android:label="fragment_camera_copy"
+        tools:layout="@layout/fragment_camera_copy" >
+        <argument
+            android:name="originalText"
+            app:argType="string" />
+        <argument
+            android:name="translatedText"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

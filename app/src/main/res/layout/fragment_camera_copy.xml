@@ -10,7 +10,7 @@
 
     <!-- Top App Bar -->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/translationTopBarLayout"
+        android:id="@+id/cameraCopyTopBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -50,7 +50,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="16dp"
                     android:layout_toEndOf="@id/back_icon"
-                    android:text="@string/translator"
+                    android:text="@string/text"
                     android:textColor="@android:color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -74,7 +74,7 @@
         android:paddingHorizontal="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/translationTopBarLayout"
+        app:layout_constraintTop_toBottomOf="@id/cameraCopyTopBarLayout"
         app:layout_constraintBottom_toTopOf="@id/translated_text_container"
         >
 
@@ -86,38 +86,24 @@
             android:layout_marginTop="12dp"
             android:padding="6dp"
             android:text="Original Text"
+            android:textSize="16sp"
             android:textColor="@android:color/darker_gray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/original_cross_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="12dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Clear text"
-            android:padding="8dp"
-            android:src="@drawable/ic_cross"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@android:color/darker_gray"
-            tools:visibility="visible"/>
-
-        <ImageView
-            android:id="@+id/pencil_icon"
+            android:id="@+id/speaker_icon_orignal_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Edit text"
             android:padding="8dp"
-            android:src="@drawable/ic_pencil"
+            android:src="@drawable/ic_speaker_gray_simple"
             app:tint="@android:color/darker_gray"
-            app:layout_constraintEnd_toStartOf="@+id/original_cross_button"
-            app:layout_constraintTop_toTopOf="@+id/original_cross_button"
-            app:layout_constraintBottom_toBottomOf="@+id/original_cross_button"/>
+            tools:layout_editor_absoluteY="11dp"
+            app:layout_constraintStart_toEndOf="@+id/original_text_indicator"
+            app:layout_constraintTop_toTopOf="@+id/original_text_indicator"
+            />
 
         <EditText
             android:id="@+id/text_input_area"
@@ -134,44 +120,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/original_text_indicator" />
-
-        <ImageView
-            android:id="@+id/copy_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginBottom="18dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Copy original text"
-            android:padding="8dp"
-            android:src="@drawable/ic_copy"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:tint="@android:color/darker_gray" />
-
-        <View
-            android:id="@+id/vertical_divider"
-            android:layout_width="1dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:background="@android:color/darker_gray"
-            app:layout_constraintBottom_toBottomOf="@+id/copy_icon"
-            app:layout_constraintStart_toEndOf="@+id/copy_icon"
-            app:layout_constraintTop_toTopOf="@+id/copy_icon" />
-
-        <ImageView
-            android:id="@+id/speaker_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Read original text aloud"
-            android:padding="8dp"
-            android:src="@drawable/ic_speaker_gray_simple"
-            app:layout_constraintBottom_toBottomOf="@+id/copy_icon"
-            app:layout_constraintStart_toEndOf="@+id/vertical_divider"
-            app:layout_constraintTop_toTopOf="@+id/copy_icon"
-            app:tint="@android:color/darker_gray" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -197,6 +145,7 @@
             android:layout_marginTop="12dp"
             android:padding="6dp"
             android:text="Translated Text"
+            android:textSize="16sp"
             android:textColor="@android:color/darker_gray"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -230,7 +179,8 @@
             android:src="@drawable/ic_copy"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:tint="@android:color/darker_gray" />
+            app:tint="@color/sky_blue"
+            />
 
         <View
             android:id="@+id/divider_1"
@@ -243,18 +193,19 @@
             app:layout_constraintTop_toTopOf="@+id/translated_copy_icon" />
 
         <ImageView
-            android:id="@+id/expand_icon"
+            android:id="@+id/translated_text_bookmark_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Expand translated text view"
             android:padding="8dp"
-            android:src="@drawable/ic_expand_to_full_screen"
+            android:src="@drawable/ic_bookmark"
             app:layout_constraintBottom_toBottomOf="@+id/translated_copy_icon"
             app:layout_constraintStart_toEndOf="@+id/divider_1"
             app:layout_constraintTop_toTopOf="@+id/translated_copy_icon"
-            app:tint="@android:color/darker_gray" />
+            app:tint="@color/sky_blue"
+            />
 
         <View
             android:id="@+id/divider_2"
@@ -263,22 +214,22 @@
             android:layout_marginStart="8dp"
             android:background="@android:color/darker_gray"
             app:layout_constraintBottom_toBottomOf="@+id/translated_copy_icon"
-            app:layout_constraintStart_toEndOf="@+id/expand_icon"
+            app:layout_constraintStart_toEndOf="@+id/translated_text_bookmark_icon"
             app:layout_constraintTop_toTopOf="@+id/translated_copy_icon" />
 
         <ImageView
-            android:id="@+id/bookmark_icon"
+            android:id="@+id/translated_text_speaker_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Bookmark translation"
             android:padding="8dp"
-            android:src="@drawable/ic_bookmark"
+            android:src="@drawable/ic_speaker_gray_simple"
             app:layout_constraintBottom_toBottomOf="@+id/translated_copy_icon"
             app:layout_constraintStart_toEndOf="@+id/divider_2"
             app:layout_constraintTop_toTopOf="@+id/translated_copy_icon"
-            app:tint="@android:color/darker_gray" />
+            app:tint="@color/sky_blue" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

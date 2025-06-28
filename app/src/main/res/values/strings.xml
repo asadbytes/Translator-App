@@ -32,4 +32,5 @@
     <string name="translate">Translate</string>
     <string name="voice_input">Voice Input</string>
     <string name="copy_translated_text">Copy translated text</string>
+    <string name="text">Text</string>
 </resources>

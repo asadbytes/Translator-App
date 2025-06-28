@@ -27,9 +27,15 @@ class MessageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val homeIcon = binding.bottomNavigation.findViewById<View>(R.id.bottom_nav_home)
+        val cameraIcon = binding.bottomNavigation.findViewById<View>(R.id.bottom_nav_camera)
+
+
+        cameraIcon.setOnClickListener {
+            findNavController().navigate(R.id.action_messageFragment_to_cameraHomeFragment)
+        }
 
         homeIcon.setOnClickListener {
-            findNavController().navigate(R.id.action_messageFragment_to_homeFragment)
+            findNavController().navigate(R.id.action_messageFragment_to_HomeFragment)
         }
 
         // Button for User 1 (no rotation)
