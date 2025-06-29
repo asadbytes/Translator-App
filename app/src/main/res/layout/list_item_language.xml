@@ -2,12 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
-    android:padding="16dp">
+    android:background="@drawable/rounded_background"
+    android:padding="16dp"
+    android:layout_marginHorizontal="12dp"
+    android:layout_marginVertical="8dp"
+    android:id="@+id/item_lang_container"
+    >
 
     <!-- Language Name -->
     <TextView
-        android:id="@+id/language_name"
+        android:id="@+id/item_lang_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -18,11 +22,22 @@
 
     <!-- Radio Button -->
     <RadioButton
-        android:id="@+id/language_radio_button"
+        android:id="@+id/item_lang_button_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:visibility="visible"
+        />
+
+    <ImageView
+        android:id="@+id/item_lang_button_selected"
+        android:src="@drawable/ic_blue_tick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
         android:clickable="false" />
 
 </RelativeLayout>
