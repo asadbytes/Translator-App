@@ -65,15 +65,15 @@
                         android:layout_weight="1" />
 
 
-                    <ImageView
-                        android:id="@+id/center_image"
-                        android:layout_width="250dp"
-                        android:layout_height="250dp"
-                        android:layout_marginStart="12dp"
+                    <Switch
+                        android:id="@+id/camera_result_switch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginEnd="12dp"
-                        android:src="@drawable/camera_result_top"
-                        android:contentDescription="Switch Languages"
-                        app:tint="@color/white" />
+                        android:thumb="@drawable/camera_thumb_selector"
+                        android:track="@drawable/camera_track_selector" />
 
                 </LinearLayout>
 
