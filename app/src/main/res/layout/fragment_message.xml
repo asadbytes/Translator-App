@@ -152,7 +152,9 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@drawable/edittext_background"
-            android:elevation="2dp">
+            android:elevation="2dp"
+            android:layout_marginBottom="8dp"
+            >
 
             <ImageView
                 android:id="@+id/speaker_icon_user1"

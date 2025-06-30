@@ -1,13 +1,11 @@
 package com.asadbyte.translatorapp.camera
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.View
-import com.asadbyte.translatorapp.R
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -16,7 +14,9 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentCameraHomeBinding
 import java.io.File
 
