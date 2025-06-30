@@ -27,14 +27,14 @@ class SettingsAdapter(
             binding.subheading.text = item.subheading
 
             // Clear previous listeners to prevent unwanted triggers
-            binding.icon2.setOnCheckedChangeListener(null)
+            binding.settingSwitch.setOnCheckedChangeListener(null)
 
             // Here you would set the initial checked state from a source like SharedPreferences
             // For now, we'll set a placeholder
-            binding.icon2.isChecked = item.id == "theme" // Example: theme is on by default
+            binding.settingSwitch.isChecked = item.id == "theme" // Example: theme is on by default
 
             // Set the listener for switch changes
-            binding.icon2.setOnCheckedChangeListener { _, isChecked ->
+            binding.settingSwitch.setOnCheckedChangeListener { _, isChecked ->
                 onSwitchCheckedChange(item, isChecked)
             }
 

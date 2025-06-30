@@ -48,13 +48,15 @@
         </LinearLayout>
 
         <!-- Third Item: Switch (pushed to the right) -->
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/icon2"
+        <Switch
+            android:id="@+id/setting_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_gravity="center"
-            />
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:minHeight="48dp"
+            android:thumb="@drawable/switch_thumb_white_padded"
+            android:track="@drawable/settings_switch_track_selector" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
