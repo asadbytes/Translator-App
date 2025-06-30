@@ -20,8 +20,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:thumb="@drawable/ic_switch_orange_with_bg"
-            android:minHeight="48dp" />
+            android:minHeight="48dp"
+            android:thumb="@drawable/switch_thumb_selector"
+            android:track="@drawable/switch_track_selector" />
 
         <LinearLayout
             android:layout_width="match_parent"
