@@ -1,0 +1,41 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Checked state -->
+    <item android:state_checked="true">
+        <layer-list>
+            <!-- Background -->
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/orange_red"/> <!-- ON color -->
+                    <corners android:radius="20dp" />
+                </shape>
+            </item>
+
+            <!-- Text ON -->
+            <item android:gravity="center|start" android:left="12dp">
+                <bitmap
+                    android:src="@drawable/on_text"
+                    android:gravity="center"/>
+            </item>
+        </layer-list>
+    </item>
+
+    <!-- Unchecked state -->
+    <item>
+        <layer-list>
+            <!-- Background -->
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="#CCCCCC"/> <!-- OFF color -->
+                    <corners android:radius="20dp" />
+                </shape>
+            </item>
+
+            <!-- Text OFF -->
+            <item android:gravity="center|end" android:right="12dp">
+                <bitmap
+                    android:src="@drawable/on_text"
+                    android:gravity="center"/>
+            </item>
+        </layer-list>
+    </item>
+</selector>

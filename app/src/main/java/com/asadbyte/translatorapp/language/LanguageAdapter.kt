@@ -9,54 +9,55 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.asadbyte.translatorapp.R
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 
-// 1. Data class to hold the language information
-data class Language(val name: String)
+// Add this data class definition if you don't have it.
+// The 'id' is important for DiffUtil.
+data class Language(val name: String, val id: String = name)
 
 class LanguageAdapter(
-    initialLanguages: List<Language>,
-    private val onSelectionChanged: (isSelected: Boolean, selectedLanguage: Language?) -> Unit // Pass selected language back
-) :
-    RecyclerView.Adapter<LanguageAdapter.LanguageViewHolder>() {
+    private val onSelectionChanged: (isSelected: Boolean, selectedLanguage: Language?) -> Unit
+) : ListAdapter<Language, LanguageAdapter.LanguageViewHolder>(LanguageDiffCallback()) {
 
-    private var languages: List<Language> = initialLanguages
     private var selectedPosition = -1
 
     inner class LanguageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val languageName: TextView = itemView.findViewById(R.id.item_lang_name)
-        val defaultIcon: RadioButton = itemView.findViewById(R.id.item_lang_button_default)
+        private val languageName: TextView = itemView.findViewById(R.id.item_lang_name)
+        val defaultIcon: ImageView = itemView.findViewById(R.id.item_lang_button_default)
         val selectedIcon: ImageView = itemView.findViewById(R.id.item_lang_button_selected)
         val container: RelativeLayout = itemView.findViewById(R.id.item_lang_container)
 
         init {
             itemView.setOnClickListener {
-                if (adapterPosition != RecyclerView.NO_POSITION) {
+                val clickedPosition = adapterPosition
+                if (clickedPosition == RecyclerView.NO_POSITION) return@setOnClickListener
 
-                    // --- THIS IS THE NEW, CORRECT LOGIC ---
+                val previouslySelectedPosition = selectedPosition
 
-                    // 1. Get the position of the previously selected item
-                    val previousSelectedPosition = selectedPosition
+                if (clickedPosition == previouslySelectedPosition) {
+                    // --- CASE 1: DESELECTING THE CURRENT ITEM ---
+                    selectedPosition = -1
+                    onSelectionChanged(false, null)
+                    // Now, we correctly notify the item that was just deselected.
+                    notifyItemChanged(clickedPosition)
 
-                    // 2. Determine the new selected position
-                    if (adapterPosition == selectedPosition) {
-                        // If the user clicks the same item, deselect it
-                        selectedPosition = -1
-                        onSelectionChanged(false, null)
-                    } else {
-                        // Otherwise, select the new item
-                        selectedPosition = adapterPosition
-                        onSelectionChanged(true, languages[selectedPosition])
+                } else {
+                    // --- CASE 2: SELECTING A NEW ITEM ---
+                    selectedPosition = clickedPosition
+                    onSelectionChanged(true, getItem(clickedPosition))
+                    // Notify the new item to show as selected
+                    notifyItemChanged(clickedPosition)
+                    // Notify the old item (if there was one) to show as deselected
+                    if (previouslySelectedPosition != -1) {
+                        notifyItemChanged(previouslySelectedPosition)
                     }
-
-                    // 3. Notify only the items that have changed
-                    if (previousSelectedPosition != -1) {
-                        // Refresh the previously selected item to clear its state
-                        notifyItemChanged(previousSelectedPosition)
-                    }
-                    // Refresh the newly selected item (or deselected item)
-                    notifyItemChanged(selectedPosition)
                 }
             }
+        }
+
+        fun bind(language: Language) {
+            languageName.text = language.name
         }
     }
 
@@ -66,32 +67,40 @@ class LanguageAdapter(
         return LanguageViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return languages.size
-    }
-
     override fun onBindViewHolder(holder: LanguageViewHolder, position: Int) {
-        val language = languages[position]
-        holder.languageName.text = language.name
+        val language = getItem(position)
+        holder.bind(language)
 
-        if (selectedPosition == position) {
-            // --- SELECTED STATE ---
+        if (position == selectedPosition) {
+            // SELECTED STATE
             holder.container.setBackgroundResource(R.drawable.rounded_background_selected)
             holder.defaultIcon.visibility = View.GONE
             holder.selectedIcon.visibility = View.VISIBLE
         } else {
-            // --- DEFAULT STATE ---
+            // DEFAULT STATE
             holder.container.setBackgroundResource(R.drawable.rounded_background)
             holder.defaultIcon.visibility = View.VISIBLE
             holder.selectedIcon.visibility = View.GONE
         }
     }
 
-    fun filterList(filteredList: List<Language>) {
-        languages = filteredList
+    // This allows you to reset the selection from the fragment if needed
+    fun clearSelection() {
+        val previouslySelected = selectedPosition
         selectedPosition = -1
-        onSelectionChanged(false, null)
-        // Use notifyDataSetChanged() here ONLY because the entire list content has changed
-        notifyDataSetChanged()
+        if (previouslySelected != -1) {
+            notifyItemChanged(previouslySelected)
+        }
+    }
+}
+
+// DiffUtil provides efficient list updates
+class LanguageDiffCallback : DiffUtil.ItemCallback<Language>() {
+    override fun areItemsTheSame(oldItem: Language, newItem: Language): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: Language, newItem: Language): Boolean {
+        return oldItem == newItem
     }
 }

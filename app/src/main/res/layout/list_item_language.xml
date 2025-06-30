@@ -21,12 +21,13 @@
         android:textSize="16sp" />
 
     <!-- Radio Button -->
-    <RadioButton
+    <ImageView
         android:id="@+id/item_lang_button_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:src="@drawable/ic_unselected_radio_button"
         android:visibility="visible"
         />
 
