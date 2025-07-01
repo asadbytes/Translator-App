@@ -22,8 +22,8 @@
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_translationFragment1"
-            app:destination="@+id/translationFragment1"
+            android:id="@+id/action_homeFragment_to_translationFragment2"
+            app:destination="@+id/translationFragment2"
             />
         <action
             android:id="@+id/action_homeFragment_to_cameraHomeFragment"

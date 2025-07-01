@@ -1,12 +1,13 @@
 package com.asadbyte.translatorapp.main
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
@@ -60,6 +61,22 @@ class HomeFragment : Fragment() {
         val cameraIcon = binding.bottomNavigation.findViewById<View>(R.id.bottom_nav_camera)
         val settingsIcon = binding.homeTopbar.topBarIcon
 
+        val textArea = binding.textInputArea
+        val crossButton = binding.crossButton
+        val translateButton = binding.translateButton
+        val micIcon = binding.micIcon
+
+        val blueCard = binding.blueCard.root
+        val bottomBar = binding.bottomNavigation
+
+        crossButton.setOnClickListener {
+            textArea.text.clear()
+        }
+
+        translateButton.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_translationFragment2)
+        }
+
         binding.swapIcon.setOnClickListener {
             viewModel.swapLanguages()
         }
@@ -87,12 +104,32 @@ class HomeFragment : Fragment() {
         }
 
         binding.homeTopbar.topBarTitle.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_translationFragment1)
+            findNavController().navigate(R.id.action_homeFragment_to_translationFragment2)
         }
 
         cameraIcon.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_cameraHomeFragment)
         }
+
+        textArea.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // not needed for now
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // not needed yet
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val hasText = s.toString().isNotEmpty()
+
+                crossButton.visibility = if (hasText) View.VISIBLE else View.GONE
+                translateButton.visibility = if (hasText) View.VISIBLE else View.GONE
+                micIcon.visibility = if (hasText) View.GONE else View.VISIBLE
+                blueCard.visibility = if (hasText) View.GONE else View.VISIBLE
+                bottomBar.visibility = if (hasText) View.GONE else View.VISIBLE
+            }
+        })
     }
 
     override fun onDestroyView() {
