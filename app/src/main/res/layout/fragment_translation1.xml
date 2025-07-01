@@ -84,7 +84,7 @@
         >
 
         <Button
-            android:id="@+id/left_button"
+            android:id="@+id/source_lang_button"
             style="@style/Widget.App.Button.LessRounded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
             android:layout_weight="1" />
 
         <ImageView
-            android:id="@+id/center_image"
+            android:id="@+id/swap_icon"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:contentDescription="Center Icon"
@@ -112,7 +112,7 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/right_button"
+            android:id="@+id/target_lang_button"
             style="@style/Widget.App.Button.LessRounded"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

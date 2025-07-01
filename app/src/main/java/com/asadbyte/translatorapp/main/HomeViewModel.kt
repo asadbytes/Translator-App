@@ -22,4 +22,10 @@ class HomeViewModel : ViewModel() {
     fun updateTargetLanguage(language: String) {
         _targetLanguage.value = language
     }
+
+    fun swapLanguages() {
+        val temp = _sourceLanguage.value
+        _sourceLanguage.value = _targetLanguage.value
+        _targetLanguage.value = temp
+    }
 }

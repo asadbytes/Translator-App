@@ -82,6 +82,7 @@
             app:destination="@id/historyFragment" />
     </fragment>
 
+    <!--  Destination for your BookMark Fragment  -->
     <fragment
         android:id="@+id/bookmarkFragment"
         android:name="com.asadbyte.translatorapp.bookmark.BookmarkFragment"
@@ -92,6 +93,7 @@
             app:destination="@id/settingsFragment" />
     </fragment>
 
+    <!--  Destination for your History Fragment  -->
     <fragment
         android:id="@+id/historyFragment"
         android:name="com.asadbyte.translatorapp.history.HistoryFragment"
@@ -102,6 +104,8 @@
             app:destination="@id/settingsFragment" />
     </fragment>
 
+
+    <!-- Destination for your Translation Fragment 1   -->
     <fragment
         android:id="@+id/translationFragment1"
         android:name="com.asadbyte.translatorapp.translation.TranslationFragment1"
@@ -112,8 +116,12 @@
             android:id="@+id/action_translationFragment1_to_translationFragment2"
             app:destination="@+id/translationFragment2"
             />
+        <action
+            android:id="@+id/action_translationFragment1_to_languageSelectionFragment"
+            app:destination="@id/languageSelectionFragment" />
     </fragment>
 
+    <!-- Destination for your Translation Fragment 2   -->
     <fragment
         android:id="@+id/translationFragment2"
         android:name="com.asadbyte.translatorapp.translation.TranslationFragment2"
@@ -122,6 +130,7 @@
         >
     </fragment>
 
+    <!-- Destination for your Camera Home Fragment   -->
     <fragment
         android:id="@+id/cameraHomeFragment"
         android:name="com.asadbyte.translatorapp.camera.CameraHomeFragment"
@@ -132,8 +141,12 @@
             android:id="@+id/action_cameraHomeFragment_to_cameraCropFragment"
             app:destination="@+id/cameraCropFragment"
             />
+        <action
+            android:id="@+id/action_cameraHomeFragment_to_languageSelectionFragment"
+            app:destination="@id/languageSelectionFragment" />
     </fragment>
 
+    <!-- Destination for your Camera Crop Fragment   -->
     <fragment
         android:id="@+id/cameraCropFragment"
         android:name="com.asadbyte.translatorapp.camera.CameraCropFragment"
@@ -148,6 +161,7 @@
             />
     </fragment>
 
+    <!-- Destination for your Camera Result Fragment   -->
     <fragment
         android:id="@+id/cameraResultFragment"
         android:name="com.asadbyte.translatorapp.camera.CameraResultFragment"
@@ -162,6 +176,7 @@
             />
     </fragment>
 
+    <!-- Destination for your Camera Copy Fragment   -->
     <fragment
         android:id="@+id/cameraCopyFragment"
         android:name="com.asadbyte.translatorapp.camera.CameraCopyFragment"

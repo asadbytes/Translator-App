@@ -15,15 +15,23 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentCameraHomeBinding
+import com.asadbyte.translatorapp.main.HomeViewModel
+import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_SOURCE
+import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_TARGET
+import com.asadbyte.translatorapp.translation.LanguageKeys.REQUEST_KEY
+import com.asadbyte.translatorapp.translation.TranslationFragment1Directions
 import java.io.File
 
 class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
 
     private lateinit var binding: FragmentCameraHomeBinding // Use ViewBinding
     private var imageCapture: ImageCapture? = null
+    private val viewModel: HomeViewModel by navGraphViewModels(R.id.nav_graph)
 
     // ActivityResultLauncher for camera permission request
     private val requestPermissionLauncher =
@@ -41,6 +49,48 @@ class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCameraHomeBinding.bind(view)
+
+        viewModel.sourceLanguage.observe(viewLifecycleOwner) { languageName ->
+            binding.sourceLangButton.text = languageName
+        }
+        viewModel.targetLanguage.observe(viewLifecycleOwner) { languageName ->
+            binding.targetLangButton.text = languageName
+        }
+
+        setFragmentResultListener(REQUEST_KEY) { _, bundle ->
+            // We have a result!
+            val selectedLanguage = bundle.getString("selectedLanguage")
+            val requesterKey = bundle.getString("requesterKey")
+
+            // Update the correct TextView based on who made the request
+            if (selectedLanguage != null) {
+                when (requesterKey) {
+                    KEY_SOURCE -> viewModel.updateSourceLanguage(selectedLanguage)
+                    KEY_TARGET -> viewModel.updateTargetLanguage(selectedLanguage)
+                }
+            }
+        }
+
+        val srcLangButton = binding.sourceLangButton
+        val targetLangButton = binding.targetLangButton
+
+        binding.swapIcon.setOnClickListener {
+            viewModel.swapLanguages()
+        }
+
+        targetLangButton.setOnClickListener {
+            val action = CameraHomeFragmentDirections.actionCameraHomeFragmentToLanguageSelectionFragment(
+                requesterKey = KEY_TARGET
+            )
+            findNavController().navigate(action)
+        }
+
+        srcLangButton.setOnClickListener {
+            val action = CameraHomeFragmentDirections.actionCameraHomeFragmentToLanguageSelectionFragment(
+                requesterKey = KEY_SOURCE
+            )
+            findNavController().navigate(action)
+        }
 
         binding.backIcon.setOnClickListener {
             findNavController().navigateUp()

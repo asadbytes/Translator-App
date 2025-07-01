@@ -11,18 +11,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentHomeBinding
+import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_SOURCE
+import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_TARGET
+import com.asadbyte.translatorapp.translation.LanguageKeys.REQUEST_KEY
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val viewModel: HomeViewModel by navGraphViewModels(R.id.nav_graph)
-
-    companion object {
-        const val REQUEST_KEY = "language_selection_request"
-        const val KEY_SOURCE = "source"
-        const val KEY_TARGET = "target"
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,6 +59,10 @@ class HomeFragment : Fragment() {
         val messageIcon = binding.bottomNavigation.findViewById<View>(R.id.bottom_nav_message)
         val cameraIcon = binding.bottomNavigation.findViewById<View>(R.id.bottom_nav_camera)
         val settingsIcon = binding.homeTopbar.topBarIcon
+
+        binding.swapIcon.setOnClickListener {
+            viewModel.swapLanguages()
+        }
 
         settingsIcon.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
