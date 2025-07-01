@@ -41,6 +41,9 @@
             android:name="isForUser2"
             android:defaultValue="false"
             app:argType="boolean" />
+        <argument
+            android:name="requesterKey"
+            app:argType="string" />
     </fragment>
 
     <!--  Destination for your Message Screen  -->

@@ -3,15 +3,18 @@ package com.asadbyte.translatorapp.language
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.asadbyte.translatorapp.databinding.FragmentLanguageSelectionBinding
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResult
 
 class LanguageSelectionFragment : Fragment() {
 
@@ -20,13 +23,14 @@ class LanguageSelectionFragment : Fragment() {
     private val args: LanguageSelectionFragmentArgs by navArgs()
 
     private lateinit var languageAdapter: LanguageAdapter
+    private var selectedLanguage: Language? = null
     private val fullLanguageList = listOf(
         // Using the new data class with unique IDs
-        Language("English"), Language("Español (Spanish)"), Language("Français (French)"),
-        Language("Deutsch (German)"), Language("Italiano (Italian)"), Language("Português (Portuguese)"),
-        Language("Русский (Russian)"), Language("中文 (Chinese)"), Language("日本語 (Japanese)"),
-        Language("한국어 (Korean)"), Language("العربية (Arabic)"), Language("हिन्दी (Hindi)"),
-        Language("اردو (Urdu)")
+        Language("English"), Language("Spanish"), Language("French"),
+        Language("German"), Language("Italian"), Language("Portuguese)"),
+        Language("Russian"), Language("Chinese"), Language("Japanese"),
+        Language("Korean"), Language("Arabic"), Language("Hindi"),
+        Language("Urdu")
     )
 
     // Flag to prevent search from triggering when we set text programmatically
@@ -53,17 +57,34 @@ class LanguageSelectionFragment : Fragment() {
             binding.toolbarInput.visibility = if (binding.toolbarInput.isVisible) View.GONE else View.VISIBLE
             binding.toolbarTitle.visibility = if (binding.toolbarInput.isVisible) View.GONE else View.VISIBLE
         }
+        binding.doneButton.setOnClickListener {
+            Log.d("NAV_DEBUG", "Done button clicked!")
+            // Check if a language is actually selected
+            selectedLanguage?.let { lang ->
+                Log.d("NAV_DEBUG", "Language is selected, preparing result.")
+                // Create a bundle to pass the data back
+                val result = bundleOf(
+                    "selectedLanguage" to lang.name,
+                    "requesterKey" to args.requesterKey // Pass the original requester key back
+                )
+                // Set the result with a request key that HomeFragment will listen for
+                setFragmentResult("language_selection_request", result)
+                // Go back to the previous screen
+                findNavController().popBackStack()
+            }
+        }
     }
 
     private fun setupRecyclerView() {
-        languageAdapter = LanguageAdapter { isSelected, selectedLanguage ->
-            updateToolbarForSelection(isSelected, selectedLanguage)
+        languageAdapter = LanguageAdapter { isSelected, language ->
+            // Update the currently selected language
+            this.selectedLanguage = language
+            updateToolbarForSelection(isSelected, language)
         }
         binding.languageRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = languageAdapter
         }
-        // Submit the initial full list
         languageAdapter.submitList(fullLanguageList)
     }
 
@@ -119,6 +140,8 @@ class LanguageSelectionFragment : Fragment() {
         // The selection is cleared automatically because filtering changes the list.
         // We just need to tell the adapter its 'selectedPosition' is now invalid.
         languageAdapter.clearSelection()
+        this.selectedLanguage = null
+        updateToolbarForSelection(false, null)
     }
 
     override fun onDestroyView() {

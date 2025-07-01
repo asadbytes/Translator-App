@@ -41,14 +41,14 @@ class MessageFragment : Fragment() {
         // Button for User 1 (no rotation)
         binding.languageButtonUser1.setOnClickListener {
             // We pass 'false' for the argument, or don't pass it to use the default value
-            val action = MessageFragmentDirections.actionMessageFragmentToLanguageSelectionFragment(isForUser2 = false)
+            val action = MessageFragmentDirections.actionMessageFragmentToLanguageSelectionFragment(isForUser2 = false, requesterKey = "source")
             findNavController().navigate(action)
         }
 
         // Button for User 2 (will be rotated)
         binding.languageButtonUser2.setOnClickListener {
             // We pass 'true' for the argument to indicate this is for User 2
-            val action = MessageFragmentDirections.actionMessageFragmentToLanguageSelectionFragment(isForUser2 = true)
+            val action = MessageFragmentDirections.actionMessageFragmentToLanguageSelectionFragment(isForUser2 = true, requesterKey = "target")
             findNavController().navigate(action)
         }
     }

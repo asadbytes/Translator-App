@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentHomeBinding
 
@@ -13,6 +16,13 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: HomeViewModel by navGraphViewModels(R.id.nav_graph)
+
+    companion object {
+        const val REQUEST_KEY = "language_selection_request"
+        const val KEY_SOURCE = "source"
+        const val KEY_TARGET = "target"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,9 +35,30 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.sourceLanguage.observe(viewLifecycleOwner) { languageName ->
+            binding.sourceLangButton.text = languageName
+        }
+        viewModel.targetLanguage.observe(viewLifecycleOwner) { languageName ->
+            binding.targetLangButton.text = languageName
+        }
+
+        setFragmentResultListener(REQUEST_KEY) { _, bundle ->
+            // We have a result!
+            val selectedLanguage = bundle.getString("selectedLanguage")
+            val requesterKey = bundle.getString("requesterKey")
+
+            // Update the correct TextView based on who made the request
+            if (selectedLanguage != null) {
+                when (requesterKey) {
+                    KEY_SOURCE -> viewModel.updateSourceLanguage(selectedLanguage)
+                    KEY_TARGET -> viewModel.updateTargetLanguage(selectedLanguage)
+                }
+            }
+        }
+
         // Find the button inside the included layout
-        val leftButton = binding.leftButton
-        val rightButton = binding.rightButton
+        val srcLangButton = binding.sourceLangButton
+        val targetLangButton = binding.targetLangButton
         val messageIcon = binding.bottomNavigation.findViewById<View>(R.id.bottom_nav_message)
         val cameraIcon = binding.bottomNavigation.findViewById<View>(R.id.bottom_nav_camera)
         val settingsIcon = binding.homeTopbar.topBarIcon
@@ -40,14 +71,18 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_messageFragment)
         }
 
-        rightButton.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_languageSelectionFragment)
+        targetLangButton.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToLanguageSelectionFragment(
+                requesterKey = KEY_TARGET
+            )
+            findNavController().navigate(action)
         }
 
-        // Set the click listener to navigate
-        leftButton.setOnClickListener {
-            // This is how you navigate using the action defined in the graph
-            findNavController().navigate(R.id.action_homeFragment_to_languageSelectionFragment)
+        srcLangButton.setOnClickListener {
+            val action = HomeFragmentDirections.actionHomeFragmentToLanguageSelectionFragment(
+                requesterKey = KEY_SOURCE
+            )
+            findNavController().navigate(action)
         }
 
         binding.homeTopbar.topBarTitle.setOnClickListener {
