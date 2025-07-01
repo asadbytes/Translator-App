@@ -215,6 +215,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/translated_text_indicator"
+            android:fontFamily="@font/noto_naskh_arabic"
             tools:text="@string/arabic_text" />
 
         <!-- Group of icons in the Bottom-Left Corner -->

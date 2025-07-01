@@ -113,7 +113,7 @@
             android:layout_marginBottom="48dp"
             android:background="@null"
             android:gravity="top|start"
-            android:text="@string/original_text"
+            android:text="@string/good_vibes"
             android:inputType="textMultiLine"
             android:padding="12dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -126,7 +126,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/translated_text_container"
         android:layout_width="0dp"
-        android:layout_height="220dp"
+        android:layout_height="260dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
@@ -154,17 +154,21 @@
             android:id="@+id/text_output_area"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="48dp"
+            android:layout_marginBottom="8dp"
+            android:padding="6dp"
             android:gravity="top|start"
-            android:padding="12dp"
+            android:background="@null"
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:fontFamily="@font/noto_nastaliq_urdu"
+            app:layout_constraintBottom_toTopOf="@+id/translated_copy_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/translated_text_indicator"
-            tools:text="@string/arabic_text" />
+            android:text="@string/acha_vibes_sirf"/>
 
         <!-- Group of icons in the Bottom-Left Corner -->
         <ImageView

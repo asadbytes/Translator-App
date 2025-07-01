@@ -38,6 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/darker_gray"
+            android:fontFamily="@font/noto_nastaliq_urdu"
             android:textSize="14sp"
             tools:text="ہیلو آپ کیسے ہیں؟" />
 
