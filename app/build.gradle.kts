@@ -57,4 +57,5 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
 
     implementation("com.google.mlkit:translate:17.0.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 }

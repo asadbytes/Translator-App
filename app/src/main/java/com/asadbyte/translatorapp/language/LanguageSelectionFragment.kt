@@ -27,7 +27,7 @@ class LanguageSelectionFragment : Fragment() {
     private val fullLanguageList = listOf(
         // Using the new data class with unique IDs
         Language("English"), Language("Spanish"), Language("French"),
-        Language("German"), Language("Italian"), Language("Portuguese)"),
+        Language("German"), Language("Italian"), Language("Portuguese"),
         Language("Russian"), Language("Chinese"), Language("Japanese"),
         Language("Korean"), Language("Arabic"), Language("Hindi"),
         Language("Urdu")
@@ -57,6 +57,7 @@ class LanguageSelectionFragment : Fragment() {
             binding.toolbarInput.visibility = if (binding.toolbarInput.isVisible) View.GONE else View.VISIBLE
             binding.toolbarTitle.visibility = if (binding.toolbarInput.isVisible) View.GONE else View.VISIBLE
         }
+
         binding.doneButton.setOnClickListener {
             Log.d("NAV_DEBUG", "Done button clicked!")
             // Check if a language is actually selected

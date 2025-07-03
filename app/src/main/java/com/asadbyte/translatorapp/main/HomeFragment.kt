@@ -20,6 +20,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
+import com.asadbyte.translatorapp.data.TranslationResult
 import com.asadbyte.translatorapp.databinding.FragmentHomeBinding
 import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_SOURCE
 import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_TARGET
@@ -62,23 +63,25 @@ class HomeFragment : Fragment() {
         }
 
 
-        viewModel.translatedText.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { translatedText ->
-                Toast.makeText(context, "Translation successful!", Toast.LENGTH_SHORT).show()
-                val originalText = binding.textInputArea.text.toString()
-
-                val action = HomeFragmentDirections.actionHomeFragmentToTranslationFragment2(
-                    originalText = originalText,
-                    translatedText = translatedText
-                )
-                findNavController().navigate(action)
+        viewModel.translationResult.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { result ->
+                when(result) {
+                    is TranslationResult.Success -> {
+                        Toast.makeText(context, "Translation successful!", Toast.LENGTH_SHORT).show()
+                        val originalText = binding.textInputArea.text.toString()
+                        val action = HomeFragmentDirections.actionHomeFragmentToTranslationFragment2(
+                            originalText = originalText,
+                            translatedText = result.text
+                        )
+                        findNavController().navigate(action)
+                    }
+                    is TranslationResult.Error -> {
+                        Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
 
-        viewModel.translationError.observe(viewLifecycleOwner) { errorMessage ->
-            // Failure! Show an error message to the user.
-            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
-        }
 
         viewModel.translationState.observe(viewLifecycleOwner) { state ->
             when {
@@ -165,10 +168,6 @@ class HomeFragment : Fragment() {
                 requesterKey = KEY_SOURCE
             )
             findNavController().navigate(action)
-        }
-
-        binding.homeTopbar.topBarTitle.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_translationFragment2)
         }
 
         cameraIcon.setOnClickListener {

@@ -49,12 +49,16 @@
     <!--  Destination for your Message Screen  -->
     <fragment
         android:id="@+id/messageFragment"
-        android:name="com.asadbyte.translatorapp.MessageFragment"
+        android:name="com.asadbyte.translatorapp.message.MessageFragment"
         android:label="fragment_message"
         tools:layout="@layout/fragment_message">
         <action
             android:id="@+id/action_messageFragment_to_languageSelectionFragment"
-            app:destination="@id/languageSelectionFragment" />
+            app:destination="@id/languageSelectionFragment">
+            <argument
+                android:name="isForUser2"
+                app:argType="boolean" />
+        </action>
         <action
             android:id="@+id/action_messageFragment_to_cameraHomeFragment"
             app:destination="@+id/cameraHomeFragment"
