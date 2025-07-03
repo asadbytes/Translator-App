@@ -29,5 +29,4 @@ class CameraCopyFragment : Fragment() {
             findNavController().navigateUp()
         }
     }
-
 }

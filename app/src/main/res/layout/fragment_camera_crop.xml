@@ -9,7 +9,7 @@
     android:background="@android:color/transparent"
     >
 
-    <ImageView
+    <com.canhub.cropper.CropImageView
         android:id="@+id/captured_image_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
