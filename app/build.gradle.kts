@@ -60,4 +60,5 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
     //implementation("com.github.CanHub:Android-Image-Cropper:4.5.0")
     implementation("com.vanniktech:android-image-cropper:4.3.3")
+    implementation("com.google.mlkit:text-recognition:16.0.0")
 }

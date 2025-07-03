@@ -105,8 +105,8 @@
             app:layout_constraintTop_toTopOf="@+id/original_text_indicator"
             />
 
-        <EditText
-            android:id="@+id/text_input_area"
+        <TextView
+            android:id="@+id/original_text_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
@@ -151,7 +151,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/text_output_area"
+            android:id="@+id/translated_text_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="4dp"

@@ -184,6 +184,10 @@
             android:id="@+id/action_cameraResultFragment_to_cameraCopyFragment"
             app:destination="@+id/cameraCopyFragment"
             />
+        <action
+            android:id="@+id/action_cameraResultFragment_to_cameraHomeFragment"
+            app:destination="@+id/cameraHomeFragment"
+            />
     </fragment>
 
     <!-- Destination for your Camera Copy Fragment   -->
@@ -191,7 +195,7 @@
         android:id="@+id/cameraCopyFragment"
         android:name="com.asadbyte.translatorapp.camera.CameraCopyFragment"
         android:label="fragment_camera_copy"
-        tools:layout="@layout/fragment_camera_copy" >
+        tools:layout="@layout/fragment_camera_copy">
         <argument
             android:name="originalText"
             app:argType="string" />
