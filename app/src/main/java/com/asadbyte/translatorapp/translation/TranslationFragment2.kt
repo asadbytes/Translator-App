@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.asadbyte.translatorapp.databinding.FragmentTranslation2Binding
 import android.text.method.KeyListener
+import androidx.navigation.fragment.navArgs
 
 class TranslationFragment2 : Fragment() {
 
@@ -16,7 +17,7 @@ class TranslationFragment2 : Fragment() {
     private val binding get() = _binding!!
     private var editable = false
     private var originalKeyListener: KeyListener? = null
-
+    private val args: TranslationFragment2Args by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,41 +28,45 @@ class TranslationFragment2 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.originalTextView.setText(args.originalText)
+        binding.translatedTextView.text = args.translatedText
+
         binding.backIcon.setOnClickListener {
             findNavController().navigateUp()
         }
 
         binding.pencilIcon.setOnClickListener {
             if (editable) {
-                binding.textInputArea.inputType = InputType.TYPE_NULL
+                binding.originalTextView.inputType = InputType.TYPE_NULL
                 editable = false
             } else {
-                binding.textInputArea.inputType = InputType.TYPE_CLASS_TEXT
+                binding.originalTextView.inputType = InputType.TYPE_CLASS_TEXT
                 editable = true
             }
         }
 
         // --- SETUP ---
         // 1. Save the original listener right after the view is created
-        originalKeyListener = binding.textInputArea.keyListener
+        originalKeyListener = binding.originalTextView.keyListener
 
         // 2. Make it non-editable BY DEFAULT
-        binding.textInputArea.keyListener = null
+        binding.originalTextView.keyListener = null
 
         binding.pencilIcon.setOnClickListener {
             // Check if it's currently editable by seeing if the keyListener is not null
-            val isEditable = binding.textInputArea.keyListener != null
+            val isEditable = binding.originalTextView.keyListener != null
 
             if (isEditable) {
                 // If it IS editable, make it NOT editable
-                binding.textInputArea.keyListener = null
+                binding.originalTextView.keyListener = null
             } else {
                 // If it is NOT editable, make it editable by restoring the original listener
-                binding.textInputArea.keyListener = originalKeyListener
+                binding.originalTextView.keyListener = originalKeyListener
 
                 // Optional: Move cursor to the end and show the keyboard
-                binding.textInputArea.requestFocus()
-                binding.textInputArea.setSelection(binding.textInputArea.text.length)
+                binding.originalTextView.requestFocus()
+                binding.originalTextView.setSelection(binding.originalTextView.text.length)
                 // You may need to add code to explicitly show the keyboard here
             }
         }
