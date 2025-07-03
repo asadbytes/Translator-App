@@ -105,8 +105,8 @@
                 android:contentDescription="Language Button User 2"
                 />
 
-            <EditText
-                android:id="@+id/text_input_area_user2"
+            <TextView
+                android:id="@+id/text_view_user2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@null"
@@ -136,7 +136,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
-            android:id="@+id/center_rotate_icon"
+            android:id="@+id/swap_icon"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
@@ -181,8 +181,8 @@
                 android:contentDescription="Language Button"
                 />
 
-            <EditText
-                android:id="@+id/text_input_area_user1"
+            <TextView
+                android:id="@+id/text_view_user1"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@null"
