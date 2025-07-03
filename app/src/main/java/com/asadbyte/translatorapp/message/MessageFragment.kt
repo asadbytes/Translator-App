@@ -1,6 +1,5 @@
 package com.asadbyte.translatorapp.message
 
-
 import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -150,7 +149,7 @@ class MessageFragment : Fragment() {
 
         this.isListeningForUser2 = isForUser2
         val langName = if (isForUser2) viewModel.targetLanguage.value!! else viewModel.sourceLanguage.value!!
-        val langCode = viewModel.getLanguageCode(langName) // Assuming getLanguageCode is public in your ViewModel
+        val langCode = viewModel.getLocaleForSpeech(langName) // Assuming getLanguageCode is public in your ViewModel
 
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
