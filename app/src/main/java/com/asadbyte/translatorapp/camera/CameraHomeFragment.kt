@@ -41,7 +41,11 @@ class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
                 startCamera()
             } else {
                 // Explain to the user that the feature is unavailable
-                Toast.makeText(context, "Camera permission is required to use this feature.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    "Camera permission is required to use this feature.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -55,6 +59,9 @@ class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
         }
         viewModel.targetLanguage.observe(viewLifecycleOwner) { languageName ->
             binding.targetLangButton.text = languageName
+        }
+        binding.swapIcon.setOnClickListener {
+            viewModel.swapLanguages()
         }
 
         setFragmentResultListener(REQUEST_KEY) { _, bundle ->
@@ -71,24 +78,19 @@ class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
             }
         }
 
-        val srcLangButton = binding.sourceLangButton
-        val targetLangButton = binding.targetLangButton
-
-        binding.swapIcon.setOnClickListener {
-            viewModel.swapLanguages()
-        }
-
-        targetLangButton.setOnClickListener {
-            val action = CameraHomeFragmentDirections.actionCameraHomeFragmentToLanguageSelectionFragment(
-                requesterKey = KEY_TARGET
-            )
+        binding.sourceLangButton.setOnClickListener {
+            val action =
+                CameraHomeFragmentDirections.actionCameraHomeFragmentToLanguageSelectionFragment(
+                    requesterKey = KEY_SOURCE
+                )
             findNavController().navigate(action)
         }
 
-        srcLangButton.setOnClickListener {
-            val action = CameraHomeFragmentDirections.actionCameraHomeFragmentToLanguageSelectionFragment(
-                requesterKey = KEY_SOURCE
-            )
+        binding.targetLangButton.setOnClickListener {
+            val action =
+                CameraHomeFragmentDirections.actionCameraHomeFragmentToLanguageSelectionFragment(
+                    requesterKey = KEY_TARGET
+                )
             findNavController().navigate(action)
         }
 
@@ -100,7 +102,6 @@ class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
             takePhoto()
         }
 
-        // Check for camera permission and start the camera
         checkCameraPermission()
     }
 
@@ -113,6 +114,7 @@ class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
                 // You can use the API that requires the permission.
                 startCamera()
             }
+
             else -> {
                 // You can directly ask for the permission.
                 requestPermissionLauncher.launch(Manifest.permission.CAMERA)
@@ -176,7 +178,10 @@ class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
                     val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
 
                     // Navigate to the next fragment, passing the URI
-                    val action = CameraHomeFragmentDirections.actionCameraHomeFragmentToCameraCropFragment(savedUri.toString())
+                    val action =
+                        CameraHomeFragmentDirections.actionCameraHomeFragmentToCameraCropFragment(
+                            savedUri.toString()
+                        )
                     findNavController().navigate(action)
                 }
             }

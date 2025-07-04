@@ -55,6 +55,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         askNotificationPermission()
+
         viewModel.sourceLanguage.observe(viewLifecycleOwner) { languageName ->
             binding.sourceLangButton.text = languageName
         }
