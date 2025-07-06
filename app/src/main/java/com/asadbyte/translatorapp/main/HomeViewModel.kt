@@ -1,27 +1,23 @@
 package com.asadbyte.translatorapp.main
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.asadbyte.translatorapp.data.TranslationRepository
+import com.asadbyte.translatorapp.data.TranslationApiModule
 import com.asadbyte.translatorapp.data.TranslationResult
-import com.google.android.gms.tasks.Tasks
-import com.google.mlkit.common.model.DownloadConditions
-import com.google.mlkit.common.model.RemoteModelManager
-import com.google.mlkit.nl.translate.TranslateLanguage
-import com.google.mlkit.nl.translate.TranslateRemoteModel
-import com.google.mlkit.nl.translate.Translation
+import com.asadbyte.translatorapp.data.room.TranslationHistory
 import com.google.mlkit.nl.translate.Translator
-import com.google.mlkit.nl.translate.TranslatorOptions
 import kotlinx.coroutines.launch
 
 val homeViewModelTag = "HomeViewModel"
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = TranslationRepository()
+    private val translationApiModule = TranslationApiModule()
+    private val dbRepository = (application as TranslatorApplication).repository
 
     private val _sourceLanguage = MutableLiveData<String>("English") // Set a default value
     val sourceLanguage: LiveData<String> = _sourceLanguage
@@ -45,9 +41,23 @@ class HomeViewModel : ViewModel() {
             _translationState.value = "Translating..."
 
             try {
-                val sourceCode = repository.getLanguageCode(sourceLanguage.value!!) // Assumes value is not null
-                val targetCode = repository.getLanguageCode(targetLanguage.value!!)
-                val result = repository.translate(text, sourceCode.toString(), targetCode.toString())
+                val sourceCode = translationApiModule.getLanguageCode(sourceLanguage.value!!) // Assumes value is not null
+                val targetCode = translationApiModule.getLanguageCode(targetLanguage.value!!)
+                val result = translationApiModule.translate(text, sourceCode.toString(), targetCode.toString())
+
+                if (result is TranslationResult.Success) {
+                    // --- SAVE TO DATABASE ---
+                    // Create a history object from the successful translation
+                    val historyRecord = TranslationHistory(
+                        originalText = text,
+                        translatedText = result.text,
+                        sourceLanguage = sourceLanguage.value!!,
+                        targetLanguage = targetLanguage.value!!
+                    )
+                    // Insert it into the database
+                    dbRepository.insert(historyRecord)
+                }
+
                 _translationResult.value = Event(result)
             } catch (e: Exception) {
                 _translationState.value = TranslationResult.Error(e.message.toString()).toString()
@@ -81,7 +91,7 @@ class HomeViewModel : ViewModel() {
     }
 
     fun getLocaleForSpeech(languageName: String): String {
-        return repository.getLocaleForSpeech(languageName)
+        return translationApiModule.getLocaleForSpeech(languageName)
     }
 }
 

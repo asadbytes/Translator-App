@@ -1,67 +1,71 @@
 package com.asadbyte.translatorapp.history
 
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.asadbyte.translatorapp.R
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import com.asadbyte.translatorapp.data.room.TranslationHistory
 
-class HistoryAdapter(
-    private val historyList: List<History>,
-    private val onItemClicked: (History) -> Unit,
-    private val onIconClicked: (History) -> Unit
-) : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
+class HistoryAdapter : ListAdapter<TranslationHistory, HistoryAdapter.HistoryViewHolder>(HistoryDiffCallback()) {
 
     /**
      * The ViewHolder holds references to the views in your list_item_history.xml layout.
      */
     inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val inputText: TextView = itemView.findViewById(R.id.input_text)
+        private val originalText: TextView = itemView.findViewById(R.id.input_text)
         private val translatedText: TextView = itemView.findViewById(R.id.translated_text)
         private val languageText: TextView = itemView.findViewById(R.id.languageText)
 
-        fun bind(history: History) {
-            // Set the text for each history
-            inputText.text = history.inputText
+        fun bind(history: TranslationHistory) {
+            // Bind the data from your Room entity to the views
+            originalText.text = history.originalText
             translatedText.text = history.translatedText
-            languageText.text = history.languageText
+            // Example: Display a language pair like "Urdu -> English"
+            languageText.text = "${history.sourceLanguage} -> ${history.targetLanguage}"
 
+            if (history.sourceLanguage == "Urdu") {
+                originalText.gravity = Gravity.START
+                originalText.typeface = ResourcesCompat.getFont(itemView.context, R.font.noto_nastaliq_urdu)
+            } else
+                originalText.typeface = ResourcesCompat.getFont(itemView.context, R.font.poppins_semibold)
 
-            // Set a click listener for the entire card
-            itemView.setOnClickListener {
-                onItemClicked(history)
-            }
-
-            // Set a click listener specifically for the history icon
-            languageText.setOnClickListener {
-                onIconClicked(history)
-            }
+            // You can do the same for the translated text
+            if (history.targetLanguage == "Urdu") {
+                translatedText.gravity = Gravity.START
+                translatedText.typeface = ResourcesCompat.getFont(itemView.context, R.font.noto_nastaliq_urdu)
+            } else
+                translatedText.typeface = ResourcesCompat.getFont(itemView.context, R.font.poppins_semibold)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
-        // Inflate your list_item_history.xml layout
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_item_history, parent, false)
         return HistoryViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        // Get the data for the current position and bind it to the ViewHolder
-        val history = historyList[position]
+        // ListAdapter provides getItem() to get the data for the current position
+        val history = getItem(position)
         holder.bind(history)
-    }
-
-    override fun getItemCount(): Int {
-        // Return the total number of items in the list
-        return historyList.size
     }
 }
 
-data class History(
-    val id: Int, // A unique ID is good practice
-    val inputText: String,
-    val translatedText: String,
-    val languageText: String
-)
+/**
+ * DiffUtil helps ListAdapter determine which items have changed, been added, or been removed.
+ */
+class HistoryDiffCallback : DiffUtil.ItemCallback<TranslationHistory>() {
+    override fun areItemsTheSame(oldItem: TranslationHistory, newItem: TranslationHistory): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: TranslationHistory, newItem: TranslationHistory): Boolean {
+        return oldItem == newItem
+    }
+}

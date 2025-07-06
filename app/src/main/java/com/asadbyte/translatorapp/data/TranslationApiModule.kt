@@ -14,7 +14,7 @@ sealed class TranslationResult {
     data class Error(val message: String) : TranslationResult()
 }
 
-class TranslationRepository {
+class TranslationApiModule {
 
     suspend fun translate(
         text: String,

@@ -4,14 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.asadbyte.translatorapp.data.TranslationRepository
+import com.asadbyte.translatorapp.data.TranslationApiModule
 import com.asadbyte.translatorapp.data.TranslationResult
 import com.asadbyte.translatorapp.main.Event
 import kotlinx.coroutines.launch
 
 class MessageViewModel : ViewModel() {
 
-    private val repository = TranslationRepository()
+    private val repository = TranslationApiModule()
 
     // Holds the selected languages for the message screen
     private val _sourceLanguage = MutableLiveData("English")

@@ -7,32 +7,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.asadbyte.translatorapp.R
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import com.asadbyte.translatorapp.data.room.TranslationHistory
 
 class BookmarksAdapter(
-    private val bookmarks: List<Bookmark>,
-    private val onItemClicked: (Bookmark) -> Unit,
-    private val onIconClicked: (Bookmark) -> Unit
-) : RecyclerView.Adapter<BookmarksAdapter.BookmarkViewHolder>() {
+    private val onIconClicked: (TranslationHistory) -> Unit
+) : ListAdapter<TranslationHistory, BookmarksAdapter.BookmarkViewHolder>(BookmarkDiffCallback()) {
 
-    /**
-     * The ViewHolder holds references to the views in your list_item_bookmark.xml layout.
-     */
     inner class BookmarkViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val inputText: TextView = itemView.findViewById(R.id.input_text)
+        private val originalText: TextView = itemView.findViewById(R.id.input_text)
         private val translatedText: TextView = itemView.findViewById(R.id.translated_text)
         private val bookmarkIcon: ImageView = itemView.findViewById(R.id.bookmark_icon)
 
-        fun bind(bookmark: Bookmark) {
-            // Set the text for each bookmark
-            inputText.text = bookmark.inputText
+        fun bind(bookmark: TranslationHistory) {
+            originalText.text = bookmark.originalText
             translatedText.text = bookmark.translatedText
 
-            // Set a click listener for the entire card
-            itemView.setOnClickListener {
-                onItemClicked(bookmark)
-            }
-
-            // Set a click listener specifically for the bookmark icon
             bookmarkIcon.setOnClickListener {
                 onIconClicked(bookmark)
             }
@@ -40,27 +31,22 @@ class BookmarksAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkViewHolder {
-        // Inflate your list_item_bookmark.xml layout
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_item_bookmark, parent, false)
         return BookmarkViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: BookmarkViewHolder, position: Int) {
-        // Get the data for the current position and bind it to the ViewHolder
-        val bookmark = bookmarks[position]
-        holder.bind(bookmark)
-    }
-
-    override fun getItemCount(): Int {
-        // Return the total number of items in the list
-        return bookmarks.size
+        holder.bind(getItem(position))
     }
 }
 
-// Bookmark.kt
-data class Bookmark(
-    val id: Int, // A unique ID is good practice
-    val inputText: String,
-    val translatedText: String
-)
+class BookmarkDiffCallback : DiffUtil.ItemCallback<TranslationHistory>() {
+    override fun areItemsTheSame(oldItem: TranslationHistory, newItem: TranslationHistory): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: TranslationHistory, newItem: TranslationHistory): Boolean {
+        return oldItem == newItem
+    }
+}

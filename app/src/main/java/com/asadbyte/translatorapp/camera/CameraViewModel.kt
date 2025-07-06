@@ -1,16 +1,19 @@
 package com.asadbyte.translatorapp.camera
 
+import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.asadbyte.translatorapp.data.TranslationRepository
+import com.asadbyte.translatorapp.data.TranslationApiModule
 import com.asadbyte.translatorapp.data.TranslationResult
+import com.asadbyte.translatorapp.data.room.TranslationHistory
+import com.asadbyte.translatorapp.main.TranslatorApplication
 import com.asadbyte.translatorapp.utils.ImageOverlayProcessor
 import com.asadbyte.translatorapp.utils.TranslatedTextBlock
 import com.google.mlkit.vision.common.InputImage
@@ -21,8 +24,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
-class CameraViewModel : ViewModel() {
-    private val repository = TranslationRepository()
+class CameraViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val dbRepository = (application as TranslatorApplication).repository
+
+    private val translationApiModule = TranslationApiModule()
     private val imageOverlayProcessor = ImageOverlayProcessor() // The class from the previous answer
 
     val isFlashEnabled = MutableLiveData<Boolean>(false)
@@ -98,12 +104,21 @@ class CameraViewModel : ViewModel() {
         viewModelScope.launch {
             // ... This is your existing translation logic, it works perfectly for Job 1. No changes needed inside.
             _processingState.postValue("Translating...")
-            val sourceCode = repository.getLanguageCode(sourceLanguage)
-            val targetCode = repository.getLanguageCode(targetLanguage)
+            val sourceCode = translationApiModule.getLanguageCode(sourceLanguage)
+            val targetCode = translationApiModule.getLanguageCode(targetLanguage)
 
-            when (val result = repository.translate(text, sourceCode.toString(), targetCode.toString())) {
+            when (val result = translationApiModule.translate(text, sourceCode.toString(), targetCode.toString())) {
                 is TranslationResult.Success -> {
                     _translatedText.postValue(result.text)
+
+                    val historyRecord = TranslationHistory(
+                        originalText = text,
+                        translatedText = result.text,
+                        sourceLanguage = sourceLanguage,
+                        targetLanguage = targetLanguage
+                    )
+                    dbRepository.insert(historyRecord)
+
                     _processingState.postValue("done")
                 }
                 is TranslationResult.Error -> {
@@ -119,12 +134,12 @@ class CameraViewModel : ViewModel() {
         sourceLanguage: String,
         targetLanguage: String
     ) {
-        val sourceCode = repository.getLanguageCode(sourceLanguage)
-        val targetCode = repository.getLanguageCode(targetLanguage)
+        val sourceCode = translationApiModule.getLanguageCode(sourceLanguage)
+        val targetCode = translationApiModule.getLanguageCode(targetLanguage)
 
         // Translate each block of text individually
         val translatedBlocks = blocks.mapNotNull { block ->
-            when (val result = repository.translate(block.text, sourceCode.toString(), targetCode.toString())) {
+            when (val result = translationApiModule.translate(block.text, sourceCode.toString(), targetCode.toString())) {
                 is TranslationResult.Success -> TranslatedTextBlock(result.text, block.boundingBox!!)
                 is TranslationResult.Error -> null // Skip blocks that fail to translate
             }
