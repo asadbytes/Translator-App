@@ -125,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="18dp"
-                android:src="@drawable/ic_mic_with_bg"
+                android:src="@drawable/ic_mic_dark_blue_bg"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:contentDescription="Voice Input User 2" />
@@ -199,7 +199,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="18dp"
-                android:src="@drawable/ic_mic_with_bg"
+                android:src="@drawable/ic_mic_dark_blue_bg"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:contentDescription="Voice Input" />
