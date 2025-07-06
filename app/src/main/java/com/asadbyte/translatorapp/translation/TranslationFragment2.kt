@@ -1,5 +1,8 @@
 package com.asadbyte.translatorapp.translation
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.text.InputType
 import androidx.fragment.app.Fragment
@@ -9,6 +12,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.asadbyte.translatorapp.databinding.FragmentTranslation2Binding
 import android.text.method.KeyListener
+import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 
 class TranslationFragment2 : Fragment() {
@@ -53,6 +57,15 @@ class TranslationFragment2 : Fragment() {
         // 2. Make it non-editable BY DEFAULT
         binding.originalTextView.keyListener = null
 
+        // This code is correct and needs no changes.
+        binding.originalCopyIcon.setOnClickListener {
+            copyToClipboard(binding.originalTextView.text)
+        }
+
+        binding.translatedCopyIcon.setOnClickListener {
+            copyToClipboard(binding.translatedTextView.text)
+        }
+
         binding.pencilIcon.setOnClickListener {
             // Check if it's currently editable by seeing if the keyListener is not null
             val isEditable = binding.originalTextView.keyListener != null
@@ -70,6 +83,17 @@ class TranslationFragment2 : Fragment() {
                 // You may need to add code to explicitly show the keyboard here
             }
         }
+    }
+
+    private fun copyToClipboard(textToCopy: CharSequence) {
+        // 1. Get the Clipboard Manager from the context
+        val clipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+
+        // 2. Create a ClipData object
+        val clipData = ClipData.newPlainText("text", textToCopy)
+
+        // 3. Set the primary clip on the clipboard
+        clipboardManager.setPrimaryClip(clipData)
     }
 }
 
