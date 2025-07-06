@@ -37,6 +37,8 @@ class CameraResultFragment : Fragment() {
 
         val imageUri = Uri.parse(args.imageUri)
 
+        cameraViewModel.processImage(imageUri, requireContext(), sourceLanguage, targetLanguage)
+
         homeViewModel.sourceLanguage.observe(viewLifecycleOwner) { languageName ->
             sourceLanguage = languageName
         }
@@ -50,6 +52,33 @@ class CameraResultFragment : Fragment() {
 
         cameraViewModel.processingState.observe(viewLifecycleOwner) { state ->
             Toast.makeText(context, state, Toast.LENGTH_SHORT).show()
+        }
+
+        cameraViewModel.overlaidBitmap.observe(viewLifecycleOwner) { translatedBitmap ->
+            // If the switch is on "Translated" when the result arrives, show it.
+            if (binding.cameraResultSwitch.isChecked) {
+                binding.capturedImageView.setImageBitmap(translatedBitmap)
+            }
+        }
+
+        cameraViewModel.processingState.observe(viewLifecycleOwner) { state ->
+            Toast.makeText(context, state, Toast.LENGTH_SHORT).show()
+        }
+
+        binding.cameraResultSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // Switch to "Translated" state
+                // Use the bitmap from LiveData if it's available
+                cameraViewModel.overlaidBitmap.value?.let {
+                    binding.capturedImageView.setImageBitmap(it)
+                }
+            } else {
+                // Switch to "Original" state
+                // Use the original bitmap from the ViewModel
+                cameraViewModel.originalBitmap.value?.let {
+                    binding.capturedImageView.setImageBitmap(it)
+                }
+            }
         }
 
         binding.backIcon.setOnClickListener {
