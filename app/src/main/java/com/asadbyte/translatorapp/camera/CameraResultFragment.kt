@@ -1,7 +1,13 @@
 package com.asadbyte.translatorapp.camera
 
+import android.content.ContentValues
+import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +20,7 @@ import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentCameraResultBinding
 import com.asadbyte.translatorapp.main.HomeViewModel
+import java.io.IOException
 
 class CameraResultFragment : Fragment() {
     private var _binding: FragmentCameraResultBinding? = null
@@ -97,6 +104,64 @@ class CameraResultFragment : Fragment() {
             // Navigate with both text results
             val action = CameraResultFragmentDirections.actionCameraResultFragmentToCameraCopyFragment(original, translated)
             findNavController().navigate(action)
+        }
+
+        binding.bottomIconDownload.setOnClickListener {
+            if(binding.cameraResultSwitch.isChecked)
+                cameraViewModel.overlaidBitmap.value?.let {
+                    downloadImage(it)
+                }
+            else
+                cameraViewModel.originalBitmap.value?.let {
+                    downloadImage(it)
+                }
+        }
+    }
+
+    // Place this function inside your CameraResultFragment class
+
+    private fun downloadImage(bitmap: Bitmap) {
+        // Create a unique filename for the image using the current time
+        val fileName = "TranslatedImage_${System.currentTimeMillis()}.jpg"
+
+        // Get the ContentResolver
+        val resolver = requireActivity().contentResolver
+
+        // Define the image details for MediaStore
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            // For Android 10 (API 29) and above, you can specify a subdirectory
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/TranslatorApp")
+            }
+        }
+
+        var imageUri: Uri? = null
+
+        try {
+            // Insert the new image record into the MediaStore
+            imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+            if (imageUri == null) {
+                throw IOException("Failed to create new MediaStore record.")
+            }
+
+            // Open an output stream to the URI and save the bitmap
+            resolver.openOutputStream(imageUri)?.use { outputStream ->
+                if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 95, outputStream)) {
+                    throw IOException("Couldn't save bitmap.")
+                }
+            }
+
+            Toast.makeText(context, "Image saved to gallery", Toast.LENGTH_SHORT).show()
+
+        } catch (e: IOException) {
+            // If there's an error, delete the incomplete image record
+            imageUri?.let { resolver.delete(it, null, null) }
+
+            Toast.makeText(context, "Failed to save image", Toast.LENGTH_SHORT).show()
+            Log.e("DownloadImage", "Error saving image", e)
         }
     }
 }
