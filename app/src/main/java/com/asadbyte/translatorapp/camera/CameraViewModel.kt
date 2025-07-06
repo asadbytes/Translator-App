@@ -25,6 +25,8 @@ class CameraViewModel : ViewModel() {
     private val repository = TranslationRepository()
     private val imageOverlayProcessor = ImageOverlayProcessor() // The class from the previous answer
 
+    val isFlashEnabled = MutableLiveData<Boolean>(false)
+
     // Holds the final results for the next fragment (no changes here)
     private val _recognizedText = MutableLiveData<String>()
     val recognizedText: LiveData<String> = _recognizedText
@@ -38,6 +40,11 @@ class CameraViewModel : ViewModel() {
     // NEW: We will now hold the bitmaps here
     val originalBitmap = MutableLiveData<Bitmap>()
     val overlaidBitmap = MutableLiveData<Bitmap>()
+
+    // Add this function to toggle the state
+    fun toggleFlash() {
+        isFlashEnabled.value = !(isFlashEnabled.value ?: false)
+    }
 
     // The main function called by the Fragment
     fun processImage(imageUri: Uri, context: Context, sourceLanguage: String, targetLanguage: String) {

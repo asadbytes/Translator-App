@@ -32,6 +32,7 @@ class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
     private lateinit var binding: FragmentCameraHomeBinding // Use ViewBinding
     private var imageCapture: ImageCapture? = null
     private val viewModel: HomeViewModel by navGraphViewModels(R.id.nav_graph)
+    private val cameraViewModel: CameraViewModel by navGraphViewModels(R.id.nav_graph)
 
     // ActivityResultLauncher for camera permission request
     private val requestPermissionLauncher =
@@ -49,9 +50,20 @@ class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
             }
         }
 
+    private val galleryLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            // The callback receives the URI of the selected image
+            uri?.let {
+                // Check if the user actually selected an image
+                // Use the same navigation action as your takePhoto() function
+                val action = CameraHomeFragmentDirections.actionCameraHomeFragmentToCameraCropFragment(it.toString())
+                findNavController().navigate(action)
+            }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding = FragmentCameraHomeBinding.bind(view)
 
         viewModel.sourceLanguage.observe(viewLifecycleOwner) { languageName ->
@@ -62,6 +74,24 @@ class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
         }
         binding.swapIcon.setOnClickListener {
             viewModel.swapLanguages()
+        }
+
+        cameraViewModel.isFlashEnabled.observe(viewLifecycleOwner) { isEnabled ->
+            if (isEnabled) {
+                binding.bottomIconFlash.setImageResource(R.drawable.ic_camera_flash_enabled)
+                imageCapture?.flashMode = ImageCapture.FLASH_MODE_ON
+            } else {
+                binding.bottomIconFlash.setImageResource(R.drawable.ic_camera_flash_disabled)
+                imageCapture?.flashMode = ImageCapture.FLASH_MODE_OFF
+            }
+        }
+
+        binding.bottomIconFlash.setOnClickListener {
+            cameraViewModel.toggleFlash()
+
+            // Optional: Show a toast based on the new state
+            val toastMessage = if (cameraViewModel.isFlashEnabled.value == true) "Flash ON" else "Flash OFF"
+            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
         }
 
         setFragmentResultListener(REQUEST_KEY) { _, bundle ->
@@ -102,6 +132,10 @@ class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {
             takePhoto()
         }
 
+        binding.bottomIconImages.setOnClickListener {
+            // Launch the gallery, asking for any image type
+            galleryLauncher.launch("image/*")
+        }
         checkCameraPermission()
     }
 
