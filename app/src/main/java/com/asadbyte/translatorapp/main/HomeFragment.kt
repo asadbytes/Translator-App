@@ -1,12 +1,16 @@
 package com.asadbyte.translatorapp.main
 
 import android.Manifest
+import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -36,10 +40,30 @@ class HomeFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 // Permission is granted. You can now show notifications.
-                Toast.makeText(requireContext(), "Notifications permission granted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Notifications permission granted",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 // Permission denied. Explain to the user that notifications are disabled.
-                Toast.makeText(requireContext(), "Notifications permission denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Notifications permission denied",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+    private val speechToTextResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val spokenText =
+                    result.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)
+                if (!spokenText.isNullOrEmpty()) {
+                    // Update the UI immediately and then request translation from the ViewModel
+                    binding.homeTextView.setText(spokenText)
+                }
             }
         }
 
@@ -66,16 +90,19 @@ class HomeFragment : Fragment() {
 
         viewModel.translationResult.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { result ->
-                when(result) {
+                when (result) {
                     is TranslationResult.Success -> {
-                        Toast.makeText(context, "Translation successful!", Toast.LENGTH_SHORT).show()
-                        val originalText = binding.textInputArea.text.toString()
-                        val action = HomeFragmentDirections.actionHomeFragmentToTranslationFragment2(
-                            originalText = originalText,
-                            translatedText = result.text
-                        )
+                        Toast.makeText(context, "Translation successful!", Toast.LENGTH_SHORT)
+                            .show()
+                        val originalText = binding.homeTextView.text.toString()
+                        val action =
+                            HomeFragmentDirections.actionHomeFragmentToTranslationFragment2(
+                                originalText = originalText,
+                                translatedText = result.text
+                            )
                         findNavController().navigate(action)
                     }
+
                     is TranslationResult.Error -> {
                         Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
                     }
@@ -92,6 +119,7 @@ class HomeFragment : Fragment() {
                     binding.statusText.text = state
                     binding.translateButton.isEnabled = false // Disable button
                 }
+
                 else -> { // This handles "done", "error", or null
                     binding.progressBar.visibility = View.GONE
                     binding.statusText.visibility = View.GONE
@@ -121,20 +149,21 @@ class HomeFragment : Fragment() {
         val cameraIcon = binding.bottomNavigation.findViewById<View>(R.id.bottom_nav_camera)
         val settingsIcon = binding.homeTopbar.topBarIcon
 
-        val textArea = binding.textInputArea
+        val textArea = binding.homeTextView
         val crossButton = binding.crossButton
         val translateButton = binding.translateButton
-        val micIcon = binding.micIcon
 
+        val micIcon = binding.micIcon
         val blueCard = binding.blueCard.root
         val bottomBar = binding.bottomNavigation
 
+        micIcon.setOnClickListener { startSpeechToText() }
         crossButton.setOnClickListener {
             textArea.text.clear()
         }
 
         translateButton.setOnClickListener {
-            val textToTranslate = binding.textInputArea.text.toString()
+            val textToTranslate = binding.homeTextView.text.toString()
             if (textToTranslate.isNotEmpty()) {
                 if (isNetworkAvailable()) {
                     Toast.makeText(context, "Translating...", Toast.LENGTH_SHORT).show()
@@ -175,7 +204,7 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_homeFragment_to_cameraHomeFragment)
         }
 
-        textArea.addTextChangedListener(object: TextWatcher {
+        textArea.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // not needed for now
             }
@@ -196,10 +225,40 @@ class HomeFragment : Fragment() {
         })
     }
 
+    private fun startSpeechToText() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            askAudioPermission()
+            return
+        }
+
+        val langName = viewModel.sourceLanguage.value!!
+        val langCode = viewModel.getLocaleForSpeech(langName)
+
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode)
+            putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now...")
+        }
+        try {
+            speechToTextResultLauncher.launch(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(requireContext(), "Speech-to-Text not supported on this device", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun askAudioPermission() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+        }
+    }
+
     private fun askNotificationPermission() {
         // This is only necessary for API level 33 and above (Android 13)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) ==
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
                 // Permission is already granted
@@ -211,7 +270,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun isNetworkAvailable(): Boolean {
-        val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
         val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
         return when {

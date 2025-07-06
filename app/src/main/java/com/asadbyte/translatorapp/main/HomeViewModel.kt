@@ -79,6 +79,10 @@ class HomeViewModel : ViewModel() {
         _sourceLanguage.value = _targetLanguage.value
         _targetLanguage.value = temp
     }
+
+    fun getLocaleForSpeech(languageName: String): String {
+        return repository.getLocaleForSpeech(languageName)
+    }
 }
 
 

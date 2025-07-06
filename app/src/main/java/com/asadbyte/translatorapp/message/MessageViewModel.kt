@@ -56,23 +56,7 @@ class MessageViewModel : ViewModel() {
 
 
     fun getLocaleForSpeech(languageName: String): String {
-        return when (languageName) {
-            "English" -> "en-US"
-            "Urdu" -> "ur-PK" // Urdu (Pakistan)
-            "Spanish" -> "es-ES"
-            "French" -> "fr-FR"
-            "German" -> "de-DE"
-            "Italian" -> "it-IT"
-            "Portuguese" -> "pt-PT"
-            "Russian" -> "ru-RU"
-            "Chinese" -> "zh-CN"
-            "Japanese" -> "ja-JP"
-            "Korean" -> "ko-KR"
-            "Arabic" -> "ar-SA" // Arabic (Saudi Arabia)
-            "Hindi" -> "hi-IN"
-            // Add other mappings as needed
-            else -> "en-US" // Default to English if no match
-        }
+        return repository.getLocaleForSpeech(languageName)
     }
 
     // Functions to update languages
