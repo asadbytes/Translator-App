@@ -20,7 +20,9 @@ import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentCameraResultBinding
 import com.asadbyte.translatorapp.main.HomeViewModel
+import com.asadbyte.translatorapp.utils.TextToSpeechManager
 import java.io.IOException
+import java.util.Locale
 
 class CameraResultFragment : Fragment() {
     private var _binding: FragmentCameraResultBinding? = null
@@ -70,6 +72,20 @@ class CameraResultFragment : Fragment() {
 
         cameraViewModel.processingState.observe(viewLifecycleOwner) { state ->
             Toast.makeText(context, state, Toast.LENGTH_SHORT).show()
+        }
+
+        binding.bottomIconSpeaker.setOnClickListener {
+            if(binding.cameraResultSwitch.isChecked){
+                val currentTargetLang = homeViewModel.targetLanguage.value ?: "Urdu"
+                val localeTag = homeViewModel.getLocaleForSpeech(currentTargetLang)
+                val targetLocale = Locale.forLanguageTag(localeTag)
+                TextToSpeechManager.speak(cameraViewModel.translatedText.value!!, targetLocale)
+            } else {
+                val currentSourceLang = homeViewModel.sourceLanguage.value ?: "English"
+                val localeTag = homeViewModel.getLocaleForSpeech(currentSourceLang)
+                val sourceLocale = Locale.forLanguageTag(localeTag)
+                TextToSpeechManager.speak(cameraViewModel.recognizedText.value!!, sourceLocale)
+            }
         }
 
         binding.cameraResultSwitch.setOnCheckedChangeListener { _, isChecked ->
