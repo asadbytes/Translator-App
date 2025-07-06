@@ -2,8 +2,6 @@ package com.asadbyte.translatorapp.camera
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Rect
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
@@ -13,8 +11,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asadbyte.translatorapp.data.TranslationRepository
 import com.asadbyte.translatorapp.data.TranslationResult
-import com.asadbyte.translatorapp.main.ImageOverlayProcessor
-import com.asadbyte.translatorapp.main.TranslatedTextBlock
+import com.asadbyte.translatorapp.utils.ImageOverlayProcessor
+import com.asadbyte.translatorapp.utils.TranslatedTextBlock
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition

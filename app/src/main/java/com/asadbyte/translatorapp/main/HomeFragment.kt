@@ -281,9 +281,4 @@ class HomeFragment : Fragment() {
             else -> false
         }
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

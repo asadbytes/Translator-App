@@ -115,10 +115,13 @@
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:background="@null"
+                android:textColor="@color/black"
+                android:textSize="18sp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/language_button_user2"
-                app:layout_constraintEnd_toStartOf="@+id/mic_icon_user2" />
+                app:layout_constraintEnd_toStartOf="@+id/mic_icon_user2"
+                />
 
             <ImageView
                 android:id="@+id/mic_icon_user2"
@@ -188,6 +191,8 @@
                 android:inputType="textMultiLine"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
+                android:textColor="@color/black"
+                android:textSize="18sp"
                 android:background="@null"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

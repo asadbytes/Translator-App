@@ -92,7 +92,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/speaker_icon_orignal_text"
+            android:id="@+id/original_text_speaker_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -112,6 +112,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="48dp"
             android:background="@null"
+            android:textColor="@color/black"
+            android:textSize="18sp"
             android:gravity="top|start"
             android:text="@string/good_vibes"
             android:inputType="textMultiLine"
@@ -161,8 +163,8 @@
             android:padding="6dp"
             android:gravity="top|start"
             android:background="@null"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
             android:fontFamily="@font/noto_nastaliq_urdu"
             app:layout_constraintBottom_toTopOf="@+id/translated_copy_icon"
             app:layout_constraintEnd_toEndOf="parent"

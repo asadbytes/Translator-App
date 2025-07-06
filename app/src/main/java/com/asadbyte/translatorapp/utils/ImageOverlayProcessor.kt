@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.main
+package com.asadbyte.translatorapp.utils
 
 import android.graphics.*
 import kotlinx.coroutines.Dispatchers

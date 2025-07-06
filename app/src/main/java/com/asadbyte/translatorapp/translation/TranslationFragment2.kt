@@ -3,17 +3,23 @@ package com.asadbyte.translatorapp.translation
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
-import androidx.fragment.app.Fragment
+import android.text.method.KeyListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.asadbyte.translatorapp.databinding.FragmentTranslation2Binding
-import android.text.method.KeyListener
-import android.widget.Toast
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
+import com.asadbyte.translatorapp.R
+import com.asadbyte.translatorapp.databinding.FragmentTranslation2Binding
+import com.asadbyte.translatorapp.main.HomeViewModel
+import com.asadbyte.translatorapp.utils.TextToSpeechManager
+import java.util.Locale
 
 class TranslationFragment2 : Fragment() {
 
@@ -22,6 +28,7 @@ class TranslationFragment2 : Fragment() {
     private var editable = false
     private var originalKeyListener: KeyListener? = null
     private val args: TranslationFragment2Args by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,8 +37,23 @@ class TranslationFragment2 : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val homeViewModel: HomeViewModel by navGraphViewModels(R.id.nav_graph)
+
+        binding.speakerIcon.setOnClickListener {
+            val currentSourceLang = homeViewModel.sourceLanguage.value ?: "English"
+            val localeTag = homeViewModel.getLocaleForSpeech(currentSourceLang)
+            val sourceLocale = Locale.forLanguageTag(localeTag)
+            TextToSpeechManager.speak(binding.originalTextView.text.toString(), sourceLocale)
+        }
+
+        if(homeViewModel.sourceLanguage.value == "Urdu")
+            binding.originalTextView.typeface = resources.getFont(R.font.noto_nastaliq_urdu)
+
+        if(homeViewModel.targetLanguage.value == "Urdu")
+            binding.translatedTextView.typeface = resources.getFont(R.font.noto_nastaliq_urdu)
 
         binding.originalTextView.setText(args.originalText)
         binding.translatedTextView.text = args.translatedText

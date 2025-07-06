@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.LayoutInflater
@@ -12,7 +14,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -20,6 +24,8 @@ import androidx.navigation.fragment.findNavController
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.data.TranslationResult
 import com.asadbyte.translatorapp.databinding.FragmentMessageBinding
+import com.asadbyte.translatorapp.utils.TextToSpeechManager
+import java.util.Locale
 
 class MessageFragment : Fragment() {
 
@@ -61,6 +67,7 @@ class MessageFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -74,8 +81,21 @@ class MessageFragment : Fragment() {
 
     private fun setupObservers() {
         // Observe language changes to update the buttons
-        viewModel.sourceLanguage.observe(viewLifecycleOwner) { binding.languageButtonUser1.text = it }
-        viewModel.targetLanguage.observe(viewLifecycleOwner) { binding.languageButtonUser2.text = it }
+        viewModel.sourceLanguage.observe(viewLifecycleOwner) {
+            binding.languageButtonUser1.text = it
+            if (it == "Urdu")
+                binding.textViewUser1.typeface = ResourcesCompat.getFont(requireContext(), R.font.noto_nastaliq_urdu)
+            else
+                binding.textViewUser1.typeface = Typeface.DEFAULT
+
+        }
+        viewModel.targetLanguage.observe(viewLifecycleOwner) {
+            binding.languageButtonUser2.text = it
+            if (it == "Urdu")
+                binding.textViewUser2.typeface = ResourcesCompat.getFont(requireContext(), R.font.noto_nastaliq_urdu)
+            else
+                binding.textViewUser2.typeface = Typeface.DEFAULT
+        }
 
         // 2. Observe the final translation result
         viewModel.translationResult.observe(viewLifecycleOwner) { event ->
@@ -118,6 +138,20 @@ class MessageFragment : Fragment() {
         cameraIcon.setOnClickListener { findNavController().navigate(R.id.action_messageFragment_to_cameraHomeFragment) }
         binding.languageButtonUser1.setOnClickListener { navigateToLanguageSelection(isForUser2 = false) }
         binding.languageButtonUser2.setOnClickListener { navigateToLanguageSelection(isForUser2 = true) }
+
+        binding.speakerIconUser1.setOnClickListener {
+            val currentSourceLang = viewModel.sourceLanguage.value ?: "English"
+            val localeTag = viewModel.getLocaleForSpeech(currentSourceLang)
+            val sourceLocale = Locale.forLanguageTag(localeTag)
+            TextToSpeechManager.speak(binding.textViewUser1.text.toString(), sourceLocale)
+        }
+
+        binding.speakerIconUser2.setOnClickListener {
+            val currentTargetLang = viewModel.targetLanguage.value ?: "Urdu"
+            val localeTag = viewModel.getLocaleForSpeech(currentTargetLang)
+            val targetLocale = Locale.forLanguageTag(localeTag)
+            TextToSpeechManager.speak(binding.textViewUser2.text.toString(), targetLocale)
+        }
     }
 
     private fun setupLanguageSelectionListener() {
@@ -149,7 +183,7 @@ class MessageFragment : Fragment() {
 
         this.isListeningForUser2 = isForUser2
         val langName = if (isForUser2) viewModel.targetLanguage.value!! else viewModel.sourceLanguage.value!!
-        val langCode = viewModel.getLocaleForSpeech(langName) // Assuming getLanguageCode is public in your ViewModel
+        val langCode = viewModel.getLocaleForSpeech(langName)
 
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
