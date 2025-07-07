@@ -39,6 +39,27 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: HomeViewModel by navGraphViewModels(R.id.nav_graph)
 
+    private val overlayPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        // Check if overlay permission is now granted
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(
+                requireContext()
+            )
+        ) {
+            // Permission granted, start the service
+            binding.blueCard.cardSwitch.isChecked = true
+            startScreenTranslatorService()
+        } else {
+            // Permission still not granted
+            Toast.makeText(
+                context,
+                "Overlay permission is required for screen translation",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
@@ -230,35 +251,61 @@ class HomeFragment : Fragment() {
         binding.blueCard.cardSwitch.setOnCheckedChangeListener(null)
         binding.blueCard.cardSwitch.isChecked = ScreenTranslatorService.isRunning
 
+        // In your fragment
         binding.blueCard.cardSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 // --- TURN THE SERVICE ON ---
 
-                // 1. First, check for the "Draw over other apps" permission
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(requireContext())) {
+                // 1. Check for overlay permission first
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(
+                        requireContext()
+                    )
+                ) {
                     // If permission is not granted, send the user to settings
                     val intent = Intent(
                         Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:${requireActivity().packageName}")
                     )
-                    startActivity(intent)
+                    overlayPermissionLauncher.launch(intent)
 
-                    // Set the switch back to off, as the service can't start without permission
+                    // Set the switch back to off temporarily
                     binding.blueCard.cardSwitch.isChecked = false
-                    Toast.makeText(context, "Permission required to start service", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Please grant overlay permission to continue",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
-                    ScreenTranslatorService.start(requireContext())
-                    Toast.makeText(context, "Screen Translator is running", Toast.LENGTH_SHORT).show()
+                    // Overlay permission is granted, start the service
+                    startScreenTranslatorService()
                 }
             } else {
+                // --- TURN THE SERVICE OFF ---
                 ScreenTranslatorService.stop(requireContext())
                 Toast.makeText(context, "Screen Translator Stopped", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    private fun startScreenTranslatorService() {
+        // Set languages before starting
+        ScreenTranslatorService.setLanguages(
+            viewModel.sourceLanguage.value!!,
+            viewModel.targetLanguage.value!!
+        )
+
+        // Start the service
+        ScreenTranslatorService.start(requireContext())
+
+        Toast.makeText(context, "Screen Translator is starting...", Toast.LENGTH_SHORT).show()
+    }
+
     private fun startSpeechToText() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             askAudioPermission()
             return
         }
@@ -267,19 +314,30 @@ class HomeFragment : Fragment() {
         val langCode = viewModel.getLocaleForSpeech(langName)
 
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode)
             putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now...")
         }
         try {
             speechToTextResultLauncher.launch(intent)
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(requireContext(), "Speech-to-Text not supported on this device", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Speech-to-Text not supported on this device",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     private fun askAudioPermission() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
         }
     }
