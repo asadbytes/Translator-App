@@ -38,6 +38,7 @@ class CameraCopyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val homeViewModel: HomeViewModel by navGraphViewModels(R.id.nav_graph)
+        val cameraViewModel: CameraViewModel by navGraphViewModels(R.id.nav_graph)
 
         if(homeViewModel.sourceLanguage.value == "Urdu")
             binding.originalTextView.typeface = resources.getFont(R.font.noto_nastaliq_urdu)
@@ -67,6 +68,20 @@ class CameraCopyFragment : Fragment() {
 
         binding.translatedCopyIcon.setOnClickListener {
             copyToClipboard(binding.translatedTextView.text)
+        }
+
+        // Observe the current translation to update the bookmark icon's state
+        cameraViewModel.currentTranslation.observe(viewLifecycleOwner) { translation ->
+            if (translation?.isBookmarked == true) {
+                binding.bookmarkIcon.setImageResource(R.drawable.ic_bookmark_selected)
+            } else {
+                binding.bookmarkIcon.setImageResource(R.drawable.ic_bookmark)
+            }
+        }
+
+        // Set the click listener for the bookmark icon
+        binding.bookmarkIcon.setOnClickListener {
+            cameraViewModel.toggleBookmark()
         }
     }
 

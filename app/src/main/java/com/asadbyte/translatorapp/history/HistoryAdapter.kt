@@ -35,7 +35,6 @@ class HistoryAdapter : ListAdapter<TranslationHistory, HistoryAdapter.HistoryVie
             } else
                 originalText.typeface = ResourcesCompat.getFont(itemView.context, R.font.poppins_semibold)
 
-            // You can do the same for the translated text
             if (history.targetLanguage == "Urdu") {
                 translatedText.gravity = Gravity.START
                 translatedText.typeface = ResourcesCompat.getFont(itemView.context, R.font.noto_nastaliq_urdu)

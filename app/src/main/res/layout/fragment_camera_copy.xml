@@ -199,7 +199,7 @@
             app:layout_constraintTop_toTopOf="@+id/translated_copy_icon" />
 
         <ImageView
-            android:id="@+id/translated_text_bookmark_icon"
+            android:id="@+id/bookmark_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -220,7 +220,7 @@
             android:layout_marginStart="8dp"
             android:background="@android:color/darker_gray"
             app:layout_constraintBottom_toBottomOf="@+id/translated_copy_icon"
-            app:layout_constraintStart_toEndOf="@+id/translated_text_bookmark_icon"
+            app:layout_constraintStart_toEndOf="@+id/bookmark_icon"
             app:layout_constraintTop_toTopOf="@+id/translated_copy_icon" />
 
         <ImageView

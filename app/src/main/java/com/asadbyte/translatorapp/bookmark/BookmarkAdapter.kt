@@ -1,10 +1,12 @@
 package com.asadbyte.translatorapp.bookmark
 
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.asadbyte.translatorapp.R
 import androidx.recyclerview.widget.DiffUtil
@@ -23,6 +25,18 @@ class BookmarksAdapter(
         fun bind(bookmark: TranslationHistory) {
             originalText.text = bookmark.originalText
             translatedText.text = bookmark.translatedText
+
+            if (bookmark.sourceLanguage == "Urdu") {
+                originalText.gravity = Gravity.START
+                originalText.typeface = ResourcesCompat.getFont(itemView.context, R.font.noto_nastaliq_urdu)
+            } else
+                originalText.typeface = ResourcesCompat.getFont(itemView.context, R.font.poppins_semibold)
+
+            if (bookmark.targetLanguage == "Urdu") {
+                translatedText.gravity = Gravity.START
+                translatedText.typeface = ResourcesCompat.getFont(itemView.context, R.font.noto_nastaliq_urdu)
+            } else
+                translatedText.typeface = ResourcesCompat.getFont(itemView.context, R.font.poppins_semibold)
 
             bookmarkIcon.setOnClickListener {
                 onIconClicked(bookmark)

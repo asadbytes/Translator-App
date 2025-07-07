@@ -8,8 +8,8 @@ class TranslationRepository(private val translationDao: TranslationDao) {
     val allHistory: Flow<List<TranslationHistory>> = translationDao.getAllHistory()
     val bookmarkedItems: Flow<List<TranslationHistory>> = translationDao.getBookmarkedItems()
 
-    suspend fun insert(translation: TranslationHistory) {
-        translationDao.insert(translation)
+    suspend fun insert(translation: TranslationHistory): Long {
+        return translationDao.insert(translation)
     }
 
     suspend fun update(translation: TranslationHistory) { // <-- ADD THIS

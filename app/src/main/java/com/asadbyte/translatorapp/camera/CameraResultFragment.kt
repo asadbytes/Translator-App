@@ -28,7 +28,6 @@ class CameraResultFragment : Fragment() {
     private var _binding: FragmentCameraResultBinding? = null
     private val binding get() = _binding!!
     private val args: CameraResultFragmentArgs by navArgs()
-    private val cameraViewModel: CameraViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,37 +40,31 @@ class CameraResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val homeViewModel: HomeViewModel by navGraphViewModels(R.id.nav_graph)
-        var sourceLanguage = homeViewModel.sourceLanguage.value
-        var targetLanguage = homeViewModel.targetLanguage.value
+        val cameraViewModel: CameraViewModel by navGraphViewModels(R.id.nav_graph)
+
+        val sourceLanguage = homeViewModel.sourceLanguage.value ?: "English"
+        val targetLanguage = homeViewModel.targetLanguage.value ?: "Urdu"
 
         val imageUri = Uri.parse(args.imageUri)
 
-        cameraViewModel.processImage(imageUri, requireContext(), sourceLanguage, targetLanguage)
-
-        homeViewModel.sourceLanguage.observe(viewLifecycleOwner) { languageName ->
-            sourceLanguage = languageName
-        }
-        homeViewModel.targetLanguage.observe(viewLifecycleOwner) { languageName ->
-            targetLanguage = languageName
-        }
-
-        // Set the image in your ImageView
+        // Set the image in your ImageView right away
         binding.capturedImageView.setImageURI(imageUri)
+
+        // Call processImage ONLY ONCE
         cameraViewModel.processImage(imageUri, requireContext(), sourceLanguage, targetLanguage)
 
+        // You only need one observer for the processing state
         cameraViewModel.processingState.observe(viewLifecycleOwner) { state ->
-            Toast.makeText(context, state, Toast.LENGTH_SHORT).show()
-        }
-
-        cameraViewModel.overlaidBitmap.observe(viewLifecycleOwner) { translatedBitmap ->
-            // If the switch is on "Translated" when the result arrives, show it.
-            if (binding.cameraResultSwitch.isChecked) {
-                binding.capturedImageView.setImageBitmap(translatedBitmap)
+            if (state != "done") { // Avoid showing a "done" toast
+                Toast.makeText(context, state, Toast.LENGTH_SHORT).show()
             }
         }
 
-        cameraViewModel.processingState.observe(viewLifecycleOwner) { state ->
-            Toast.makeText(context, state, Toast.LENGTH_SHORT).show()
+        // The rest of your observers and listeners are fine...
+        cameraViewModel.overlaidBitmap.observe(viewLifecycleOwner) { translatedBitmap ->
+            if (binding.cameraResultSwitch.isChecked) {
+                binding.capturedImageView.setImageBitmap(translatedBitmap)
+            }
         }
 
         binding.bottomIconSpeaker.setOnClickListener {

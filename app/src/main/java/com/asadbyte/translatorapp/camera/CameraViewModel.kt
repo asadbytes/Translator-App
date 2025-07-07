@@ -21,6 +21,7 @@ import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -32,10 +33,15 @@ class CameraViewModel(application: Application) : AndroidViewModel(application) 
     private val imageOverlayProcessor = ImageOverlayProcessor() // The class from the previous answer
 
     val isFlashEnabled = MutableLiveData<Boolean>(false)
+    private var lastProcessedUri: String? = null
 
     // Holds the final results for the next fragment (no changes here)
     private val _recognizedText = MutableLiveData<String>()
     val recognizedText: LiveData<String> = _recognizedText
+
+    private val _currentTranslation = MutableLiveData<TranslationHistory?>()
+    val currentTranslation: LiveData<TranslationHistory?> = _currentTranslation
+
     private val _translatedText = MutableLiveData<String>()
     val translatedText: LiveData<String> = _translatedText
 
@@ -54,6 +60,11 @@ class CameraViewModel(application: Application) : AndroidViewModel(application) 
 
     // The main function called by the Fragment
     fun processImage(imageUri: Uri, context: Context, sourceLanguage: String, targetLanguage: String) {
+        if (imageUri.toString() == lastProcessedUri) {
+            return
+        }
+        lastProcessedUri = imageUri.toString()
+
         viewModelScope.launch(Dispatchers.IO) {
             _processingState.postValue("Recognizing text...")
             try {
@@ -101,6 +112,10 @@ class CameraViewModel(application: Application) : AndroidViewModel(application) 
 
     // RENAMED from translateExtractedText for clarity
     private fun translateFullText(text: String, sourceLanguage: String, targetLanguage: String) {
+        if (text == _recognizedText.value && !_translatedText.value.isNullOrEmpty()) {
+            _processingState.postValue("done") // Ensure state is updated
+            return
+        }
         viewModelScope.launch {
             // ... This is your existing translation logic, it works perfectly for Job 1. No changes needed inside.
             _processingState.postValue("Translating...")
@@ -117,7 +132,8 @@ class CameraViewModel(application: Application) : AndroidViewModel(application) 
                         sourceLanguage = sourceLanguage,
                         targetLanguage = targetLanguage
                     )
-                    dbRepository.insert(historyRecord)
+                    val newId = dbRepository.insert(historyRecord)
+                    _currentTranslation.postValue(historyRecord.copy(id = newId.toInt()))
 
                     _processingState.postValue("done")
                 }
@@ -125,6 +141,22 @@ class CameraViewModel(application: Application) : AndroidViewModel(application) 
                     _processingState.postValue(result.message)
                 }
             }
+        }
+    }
+
+    fun toggleBookmark() {
+        // Get the current translation object
+        val currentItem = _currentTranslation.value ?: return
+
+        viewModelScope.launch {
+            // Create a new object with the bookmark state flipped
+            val updatedItem = currentItem.copy(isBookmarked = !currentItem.isBookmarked)
+
+            // Update the database
+            dbRepository.update(updatedItem)
+
+            // Update the LiveData so the UI can react to the change
+            _currentTranslation.value = updatedItem
         }
     }
 
@@ -151,5 +183,9 @@ class CameraViewModel(application: Application) : AndroidViewModel(application) 
             translatedBlocks
         )
         overlaidBitmap.postValue(newBitmap)
+    }
+
+    fun clearLastProcessedUri() {
+        lastProcessedUri = null
     }
 }

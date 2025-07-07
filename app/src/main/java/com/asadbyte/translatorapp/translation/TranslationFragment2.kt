@@ -49,10 +49,10 @@ class TranslationFragment2 : Fragment() {
             TextToSpeechManager.speak(binding.originalTextView.text.toString(), sourceLocale)
         }
 
-        if(homeViewModel.sourceLanguage.value == "Urdu")
+        if (homeViewModel.sourceLanguage.value == "Urdu")
             binding.originalTextView.typeface = resources.getFont(R.font.noto_nastaliq_urdu)
 
-        if(homeViewModel.targetLanguage.value == "Urdu")
+        if (homeViewModel.targetLanguage.value == "Urdu")
             binding.translatedTextView.typeface = resources.getFont(R.font.noto_nastaliq_urdu)
 
         binding.originalTextView.setText(args.originalText)
@@ -105,11 +105,29 @@ class TranslationFragment2 : Fragment() {
                 // You may need to add code to explicitly show the keyboard here
             }
         }
+
+        // In your Fragment's onViewCreated
+
+        // Observe the current translation to update the bookmark icon's state
+        homeViewModel.currentTranslation.observe(viewLifecycleOwner) { translation ->
+            if (translation?.isBookmarked == true) {
+                binding.bookmarkIcon.setImageResource(R.drawable.ic_bookmark_selected)
+                binding.bookmarkIcon.imageTintMode = null
+            } else {
+                binding.bookmarkIcon.setImageResource(R.drawable.ic_bookmark)
+            }
+        }
+
+        // Set the click listener for the bookmark icon
+        binding.bookmarkIcon.setOnClickListener {
+            homeViewModel.toggleBookmark()
+        }
     }
 
     private fun copyToClipboard(textToCopy: CharSequence) {
         // 1. Get the Clipboard Manager from the context
-        val clipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipboardManager =
+            requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
         // 2. Create a ClipData object
         val clipData = ClipData.newPlainText("text", textToCopy)

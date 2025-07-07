@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface TranslationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(translation: TranslationHistory)
+    suspend fun insert(translation: TranslationHistory): Long
 
     @Query("SELECT * FROM translation_history ORDER BY timestamp DESC")
     fun getAllHistory(): Flow<List<TranslationHistory>>

@@ -25,6 +25,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _targetLanguage = MutableLiveData<String>("Urdu") // Set a default value
     val targetLanguage: LiveData<String> = _targetLanguage
 
+    private val _currentTranslation = MutableLiveData<TranslationHistory?>()
+    val currentTranslation: LiveData<TranslationHistory?> = _currentTranslation
+    val currentItem = _currentTranslation.value
+
     // Holds the translation result for the UI to observe
     private val _translationResult = MutableLiveData<Event<TranslationResult>>()
     val translationResult: LiveData<Event<TranslationResult>> = _translationResult
@@ -37,6 +41,19 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun translate(text: String) {
+
+        if (currentItem != null &&
+            currentItem.originalText == text &&
+            currentItem.sourceLanguage == sourceLanguage.value &&
+            currentItem.targetLanguage == targetLanguage.value
+        ) {
+            // Post the existing successful result to the UI
+            val existingResult = TranslationResult.Success(currentItem.translatedText)
+            _translationResult.value = Event(existingResult)
+            _translationState.value = "done"
+            return
+        }
+
         viewModelScope.launch {
             _translationState.value = "Translating..."
 
@@ -47,15 +64,17 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
                 if (result is TranslationResult.Success) {
                     // --- SAVE TO DATABASE ---
-                    // Create a history object from the successful translation
                     val historyRecord = TranslationHistory(
                         originalText = text,
                         translatedText = result.text,
                         sourceLanguage = sourceLanguage.value!!,
-                        targetLanguage = targetLanguage.value!!
+                        targetLanguage = targetLanguage.value!!,
+                        isBookmarked = _currentTranslation.value?.isBookmarked ?: false // Preserve state if re-translating
                     )
-                    // Insert it into the database
-                    dbRepository.insert(historyRecord)
+
+                    // Get the ID of the newly inserted record
+                    val newId = dbRepository.insert(historyRecord)
+                    _currentTranslation.postValue(historyRecord.copy(id = newId.toInt()))
                 }
 
                 _translationResult.value = Event(result)
@@ -64,6 +83,22 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             } finally {
                 _translationState.value = "done"
             }
+        }
+    }
+
+    fun toggleBookmark() {
+        // Get the current translation object
+        val currentItem = _currentTranslation.value ?: return
+
+        viewModelScope.launch {
+            // Create a new object with the bookmark state flipped
+            val updatedItem = currentItem.copy(isBookmarked = !currentItem.isBookmarked)
+
+            // Update the database
+            dbRepository.update(updatedItem)
+
+            // Update the LiveData so the UI can react to the change
+            _currentTranslation.value = updatedItem
         }
     }
 
