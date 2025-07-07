@@ -8,8 +8,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.speech.RecognizerIntent
 import android.text.Editable
 import android.text.TextWatcher
@@ -26,6 +28,7 @@ import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.data.TranslationResult
 import com.asadbyte.translatorapp.databinding.FragmentHomeBinding
+import com.asadbyte.translatorapp.service.ScreenTranslatorService
 import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_SOURCE
 import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_TARGET
 import com.asadbyte.translatorapp.translation.LanguageKeys.REQUEST_KEY
@@ -223,6 +226,43 @@ class HomeFragment : Fragment() {
                 bottomBar.visibility = if (hasText) View.GONE else View.VISIBLE
             }
         })
+
+        binding.blueCard.cardSwitch.setOnCheckedChangeListener(null)
+        binding.blueCard.cardSwitch.isChecked = ScreenTranslatorService.isRunning
+
+        binding.blueCard.cardSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // --- TURN THE SERVICE ON ---
+
+                // 1. First, check for the "Draw over other apps" permission
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(requireContext())) {
+                    // If permission is not granted, send the user to settings
+                    val intent = Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:${requireActivity().packageName}")
+                    )
+                    startActivity(intent)
+
+                    // Set the switch back to off, as the service can't start without permission
+                    binding.blueCard.cardSwitch.isChecked = false
+                    Toast.makeText(context, "Permission required to start service", Toast.LENGTH_SHORT).show()
+                } else {
+                    // 2. If permission is granted, start the service
+                    val serviceIntent = Intent(requireContext(), ScreenTranslatorService::class.java)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        requireContext().startForegroundService(serviceIntent)
+                    } else {
+                        requireContext().startService(serviceIntent)
+                    }
+                    Toast.makeText(context, "Screen Translator is running", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                // --- TURN THE SERVICE OFF ---
+                val serviceIntent = Intent(requireContext(), ScreenTranslatorService::class.java)
+                requireContext().stopService(serviceIntent)
+                Toast.makeText(context, "Screen Translator Stopped", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun startSpeechToText() {
@@ -281,4 +321,5 @@ class HomeFragment : Fragment() {
             else -> false
         }
     }
+
 }
