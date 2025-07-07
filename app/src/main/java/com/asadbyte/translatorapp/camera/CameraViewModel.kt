@@ -65,6 +65,8 @@ class CameraViewModel(application: Application) : AndroidViewModel(application) 
         }
         lastProcessedUri = imageUri.toString()
 
+
+
         viewModelScope.launch(Dispatchers.IO) {
             _processingState.postValue("Recognizing text...")
             try {

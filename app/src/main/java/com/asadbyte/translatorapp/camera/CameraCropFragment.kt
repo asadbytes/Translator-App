@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentCameraCropBinding
 import kotlinx.coroutines.launch
@@ -23,6 +24,7 @@ class CameraCropFragment : Fragment(R.layout.fragment_camera_crop) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCameraCropBinding.bind(view)
+        val cameraViewModel: CameraViewModel by navGraphViewModels(R.id.nav_graph)
 
         val imageUri = Uri.parse(args.imageUri)
 
@@ -30,6 +32,7 @@ class CameraCropFragment : Fragment(R.layout.fragment_camera_crop) {
         binding.capturedImageView.setImageUriAsync(imageUri)
 
         binding.backIcon.setOnClickListener {
+            cameraViewModel.clearLastProcessedUri()
             findNavController().navigateUp()
         }
 
