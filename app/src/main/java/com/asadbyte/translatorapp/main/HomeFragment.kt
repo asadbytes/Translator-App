@@ -247,19 +247,11 @@ class HomeFragment : Fragment() {
                     binding.blueCard.cardSwitch.isChecked = false
                     Toast.makeText(context, "Permission required to start service", Toast.LENGTH_SHORT).show()
                 } else {
-                    // 2. If permission is granted, start the service
-                    val serviceIntent = Intent(requireContext(), ScreenTranslatorService::class.java)
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        requireContext().startForegroundService(serviceIntent)
-                    } else {
-                        requireContext().startService(serviceIntent)
-                    }
+                    ScreenTranslatorService.start(requireContext())
                     Toast.makeText(context, "Screen Translator is running", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                // --- TURN THE SERVICE OFF ---
-                val serviceIntent = Intent(requireContext(), ScreenTranslatorService::class.java)
-                requireContext().stopService(serviceIntent)
+                ScreenTranslatorService.stop(requireContext())
                 Toast.makeText(context, "Screen Translator Stopped", Toast.LENGTH_SHORT).show()
             }
         }
