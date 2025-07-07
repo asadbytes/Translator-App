@@ -12,6 +12,10 @@ class TranslationRepository(private val translationDao: TranslationDao) {
         return translationDao.insert(translation)
     }
 
+    suspend fun deleteItemsByIds(itemIds: List<Int>) {
+        translationDao.deleteItemsByIds(itemIds)
+    }
+
     suspend fun update(translation: TranslationHistory) { // <-- ADD THIS
         translationDao.update(translation)
     }

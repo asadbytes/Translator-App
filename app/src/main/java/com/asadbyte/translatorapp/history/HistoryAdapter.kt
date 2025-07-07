@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.asadbyte.translatorapp.data.room.TranslationHistory
 
-class HistoryAdapter : ListAdapter<TranslationHistory, HistoryAdapter.HistoryViewHolder>(HistoryDiffCallback()) {
+class HistoryAdapter(
+    private val viewModel: HistoryViewModel
+) : ListAdapter<TranslationHistory, HistoryAdapter.HistoryViewHolder>(HistoryDiffCallback()) {
 
     /**
      * The ViewHolder holds references to the views in your list_item_history.xml layout.
@@ -21,13 +23,30 @@ class HistoryAdapter : ListAdapter<TranslationHistory, HistoryAdapter.HistoryVie
         private val originalText: TextView = itemView.findViewById(R.id.input_text)
         private val translatedText: TextView = itemView.findViewById(R.id.translated_text)
         private val languageText: TextView = itemView.findViewById(R.id.languageText)
+        private val selectionOverlay: View = itemView.findViewById(R.id.selection_overlay)
 
-        fun bind(history: TranslationHistory) {
+        fun bind(history: TranslationHistory, isSelected: Boolean) {
             // Bind the data from your Room entity to the views
             originalText.text = history.originalText
             translatedText.text = history.translatedText
             // Example: Display a language pair like "Urdu -> English"
             languageText.text = "${history.sourceLanguage} -> ${history.targetLanguage}"
+
+            selectionOverlay.visibility = if (isSelected) View.VISIBLE else View.GONE
+
+            itemView.setOnClickListener {
+                // If in selection mode, toggle the item's selection state
+                if (viewModel.isSelectionModeActive.value == true) {
+                    viewModel.toggleSelection(history.id)
+                }
+            }
+
+            itemView.setOnLongClickListener {
+                // Always start selection mode on a long click
+                viewModel.enableSelectionMode()
+                viewModel.toggleSelection(history.id)
+                true // Consume the long click
+            }
 
             if (history.sourceLanguage == "Urdu") {
                 originalText.gravity = Gravity.START
@@ -52,7 +71,8 @@ class HistoryAdapter : ListAdapter<TranslationHistory, HistoryAdapter.HistoryVie
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         // ListAdapter provides getItem() to get the data for the current position
         val history = getItem(position)
-        holder.bind(history)
+        val isSelected = viewModel.selectedItems.value?.contains(history.id) ?: false
+        holder.bind(history, isSelected)
     }
 }
 

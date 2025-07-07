@@ -18,6 +18,9 @@ interface TranslationDao {
     @Query("SELECT * FROM translation_history WHERE isBookmarked = 1 ORDER BY timestamp DESC")
     fun getBookmarkedItems(): Flow<List<TranslationHistory>>
 
+    @Query("DELETE FROM translation_history WHERE id IN (:itemIds)")
+    suspend fun deleteItemsByIds(itemIds: List<Int>)
+
     @Update
     suspend fun update(translation: TranslationHistory)
 }

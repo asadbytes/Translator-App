@@ -63,6 +63,19 @@
                     android:padding="8dp"
                     android:src="@drawable/ic_kebab_menu" />
 
+                <ImageView
+                    android:id="@+id/delete_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/ic_delete"
+                    android:padding="8dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    app:tint="@color/sky_blue" />
+
             </RelativeLayout>
 
         </androidx.appcompat.widget.Toolbar>
