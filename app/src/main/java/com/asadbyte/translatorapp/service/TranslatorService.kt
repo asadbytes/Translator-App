@@ -105,6 +105,7 @@ class ScreenTranslatorService : Service() {
     private var imageReader: ImageReader? = null
 
     private var hasPermission = false
+    private var isCaptureInProgress = false
     private var permissionResultCode: Int = Activity.RESULT_CANCELED
     private var permissionData: Intent? = null
 
@@ -194,7 +195,6 @@ class ScreenTranslatorService : Service() {
     private fun onBubbleClicked() {
         Log.d("ScreenTranslatorService", "Bubble clicked")
 
-        // Prevent multiple simultaneous translations
         if (isCurrentlyTranslating) {
             Log.d("ScreenTranslatorService", "Already translating, ignoring click")
             return
@@ -210,6 +210,10 @@ class ScreenTranslatorService : Service() {
         floatingBubbleView.visibility = View.GONE
         isCurrentlyTranslating = true
 
+        // Clean up previous resources before creating new ones
+        virtualDisplay?.release()
+        imageReader?.close()
+
         if (mediaProjection == null) {
             Log.d("ScreenTranslatorService", "Creating new media projection")
             val mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
@@ -220,11 +224,13 @@ class ScreenTranslatorService : Service() {
     }
 
     private fun captureScreen() {
-        if (mediaProjection == null) {
-            Log.e("ScreenTranslatorService", "MediaProjection is null")
+        if (mediaProjection == null || isCaptureInProgress) {
+            Log.e("ScreenTranslatorService", "MediaProjection is null or capture in progress")
             showBubbleAgain()
             return
         }
+
+        isCaptureInProgress = true
 
         // Clean up previous resources
         virtualDisplay?.release()
@@ -275,6 +281,7 @@ class ScreenTranslatorService : Service() {
     }
 
     private fun processAndShowOverlay(screenshot: Bitmap) {
+        isCaptureInProgress = false
         // Don't process if overlay is already visible
         if (isOverlayVisible) {
             Log.d("ScreenTranslatorService", "Overlay already visible, resetting translation state")
@@ -398,7 +405,14 @@ class ScreenTranslatorService : Service() {
             }
         }
         overlayView = null
-        isOverlayVisible = false  // Mark overlay as hidden
+        isOverlayVisible = false
+
+        // Clean up screen capture resources to prevent loop
+        virtualDisplay?.release()
+        virtualDisplay = null
+        imageReader?.close()
+        imageReader = null
+
         showBubbleAgain()
     }
 
