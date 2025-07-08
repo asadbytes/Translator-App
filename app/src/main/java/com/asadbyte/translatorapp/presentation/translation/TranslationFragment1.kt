@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.translation
+package com.asadbyte.translatorapp.presentation.translation
 
 import android.os.Bundle
 import android.text.Editable
@@ -12,11 +12,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentTranslation1Binding
-import com.asadbyte.translatorapp.main.HomeFragment
-import com.asadbyte.translatorapp.main.HomeViewModel
-import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_SOURCE
-import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_TARGET
-import com.asadbyte.translatorapp.translation.LanguageKeys.REQUEST_KEY
+import com.asadbyte.translatorapp.presentation.main.HomeViewModel
+import com.asadbyte.translatorapp.presentation.translation.LanguageKeys.KEY_SOURCE
+import com.asadbyte.translatorapp.presentation.translation.LanguageKeys.KEY_TARGET
+import com.asadbyte.translatorapp.presentation.translation.LanguageKeys.REQUEST_KEY
 
 class TranslationFragment1 : Fragment() {
 

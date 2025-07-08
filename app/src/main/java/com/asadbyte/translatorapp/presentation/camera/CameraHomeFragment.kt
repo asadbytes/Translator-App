@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.camera
+package com.asadbyte.translatorapp.presentation.camera
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -20,11 +20,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentCameraHomeBinding
-import com.asadbyte.translatorapp.main.HomeViewModel
-import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_SOURCE
-import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_TARGET
-import com.asadbyte.translatorapp.translation.LanguageKeys.REQUEST_KEY
-import com.asadbyte.translatorapp.translation.TranslationFragment1Directions
+import com.asadbyte.translatorapp.presentation.main.HomeViewModel
+import com.asadbyte.translatorapp.presentation.translation.LanguageKeys.KEY_SOURCE
+import com.asadbyte.translatorapp.presentation.translation.LanguageKeys.KEY_TARGET
+import com.asadbyte.translatorapp.presentation.translation.LanguageKeys.REQUEST_KEY
 import java.io.File
 
 class CameraHomeFragment : Fragment(R.layout.fragment_camera_home) {

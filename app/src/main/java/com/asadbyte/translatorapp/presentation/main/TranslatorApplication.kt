@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.main
+package com.asadbyte.translatorapp.presentation.main
 
 import androidx.camera.camera2.Camera2Config
 import androidx.camera.core.CameraXConfig

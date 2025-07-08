@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.history
+package com.asadbyte.translatorapp.presentation.history
 
 import android.view.Gravity
 import android.view.LayoutInflater

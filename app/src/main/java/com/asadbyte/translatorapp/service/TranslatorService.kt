@@ -24,8 +24,7 @@ import android.view.WindowManager
 import android.widget.ImageView
 import androidx.core.app.NotificationCompat
 import com.asadbyte.translatorapp.R
-import com.asadbyte.translatorapp.data.TranslationApiModule
-import com.asadbyte.translatorapp.main.TranslatorApplication
+import com.asadbyte.translatorapp.presentation.main.TranslatorApplication
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions

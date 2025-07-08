@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.camera
+package com.asadbyte.translatorapp.presentation.camera
 
 import android.net.Uri
 import android.os.Bundle

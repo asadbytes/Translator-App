@@ -1,9 +1,9 @@
-package com.asadbyte.translatorapp.bookmark
+package com.asadbyte.translatorapp.presentation.bookmark
 
 import android.app.Application
 import androidx.lifecycle.*
 import com.asadbyte.translatorapp.data.room.TranslationHistory
-import com.asadbyte.translatorapp.main.TranslatorApplication
+import com.asadbyte.translatorapp.presentation.main.TranslatorApplication
 import kotlinx.coroutines.launch
 
 class BookmarkViewModel(application: Application) : AndroidViewModel(application) {

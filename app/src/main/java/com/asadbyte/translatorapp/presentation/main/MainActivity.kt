@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.main
+package com.asadbyte.translatorapp.presentation.main
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

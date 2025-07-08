@@ -1,16 +1,15 @@
-package com.asadbyte.translatorapp.language
+package com.asadbyte.translatorapp.presentation.language
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RadioButton
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import com.asadbyte.translatorapp.R
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.asadbyte.translatorapp.R
 
 // Add this data class definition if you don't have it.
 // The 'id' is important for DiffUtil.

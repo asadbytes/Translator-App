@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.bookmark
+package com.asadbyte.translatorapp.presentation.bookmark
 
 import android.view.Gravity
 import android.view.LayoutInflater

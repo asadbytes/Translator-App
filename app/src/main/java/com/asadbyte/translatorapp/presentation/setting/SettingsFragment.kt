@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.setting
+package com.asadbyte.translatorapp.presentation.setting
 
 import android.os.Bundle
 import android.view.LayoutInflater

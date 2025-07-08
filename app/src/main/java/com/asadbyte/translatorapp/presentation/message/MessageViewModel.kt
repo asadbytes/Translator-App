@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.message
+package com.asadbyte.translatorapp.presentation.message
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asadbyte.translatorapp.data.TranslationApiModule
 import com.asadbyte.translatorapp.data.TranslationResult
-import com.asadbyte.translatorapp.main.Event
+import com.asadbyte.translatorapp.presentation.main.Event
 import kotlinx.coroutines.launch
 
 class MessageViewModel : ViewModel() {

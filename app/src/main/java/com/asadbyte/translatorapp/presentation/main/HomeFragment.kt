@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.main
+package com.asadbyte.translatorapp.presentation.main
 
 import android.Manifest
 import android.app.Activity
@@ -29,9 +29,9 @@ import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.data.TranslationResult
 import com.asadbyte.translatorapp.databinding.FragmentHomeBinding
 import com.asadbyte.translatorapp.service.ScreenTranslatorService
-import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_SOURCE
-import com.asadbyte.translatorapp.translation.LanguageKeys.KEY_TARGET
-import com.asadbyte.translatorapp.translation.LanguageKeys.REQUEST_KEY
+import com.asadbyte.translatorapp.presentation.translation.LanguageKeys.KEY_SOURCE
+import com.asadbyte.translatorapp.presentation.translation.LanguageKeys.KEY_TARGET
+import com.asadbyte.translatorapp.presentation.translation.LanguageKeys.REQUEST_KEY
 
 class HomeFragment : Fragment() {
 

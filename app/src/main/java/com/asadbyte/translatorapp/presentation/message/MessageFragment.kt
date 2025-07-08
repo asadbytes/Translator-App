@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.message
+package com.asadbyte.translatorapp.presentation.message
 
 import android.Manifest
 import android.app.Activity

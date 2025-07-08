@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.camera
+package com.asadbyte.translatorapp.presentation.camera
 
 import android.app.Application
 import android.content.Context
@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import com.asadbyte.translatorapp.data.TranslationApiModule
 import com.asadbyte.translatorapp.data.TranslationResult
 import com.asadbyte.translatorapp.data.room.TranslationHistory
-import com.asadbyte.translatorapp.main.TranslatorApplication
+import com.asadbyte.translatorapp.presentation.main.TranslatorApplication
 import com.asadbyte.translatorapp.utils.ImageOverlayProcessor
 import com.asadbyte.translatorapp.utils.TranslatedTextBlock
 import com.google.mlkit.vision.common.InputImage
@@ -21,7 +21,6 @@ import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 

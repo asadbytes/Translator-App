@@ -1,4 +1,4 @@
-package com.asadbyte.translatorapp.translation
+package com.asadbyte.translatorapp.presentation.translation
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -17,7 +17,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentTranslation2Binding
-import com.asadbyte.translatorapp.main.HomeViewModel
+import com.asadbyte.translatorapp.presentation.main.HomeViewModel
 import com.asadbyte.translatorapp.utils.TextToSpeechManager
 import java.util.Locale
 

@@ -1,22 +1,21 @@
-package com.asadbyte.translatorapp.camera
+package com.asadbyte.translatorapp.presentation.camera
 
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.databinding.FragmentCameraCopyBinding
-import com.asadbyte.translatorapp.databinding.FragmentCameraResultBinding
-import com.asadbyte.translatorapp.main.HomeViewModel
+import com.asadbyte.translatorapp.presentation.main.HomeViewModel
 import com.asadbyte.translatorapp.utils.TextToSpeechManager
 import java.util.Locale
 

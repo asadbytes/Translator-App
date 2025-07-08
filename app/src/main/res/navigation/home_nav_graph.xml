@@ -8,7 +8,7 @@
     <!-- Destination for your Home Screen -->
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.asadbyte.translatorapp.main.HomeFragment"
+        android:name="com.asadbyte.translatorapp.presentation.main.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <!-- An "action" defines a navigation path -->
@@ -34,7 +34,7 @@
     <!-- Destination for your Language Selection Screen -->
     <fragment
         android:id="@+id/languageSelectionFragment"
-        android:name="com.asadbyte.translatorapp.language.LanguageSelectionFragment"
+        android:name="com.asadbyte.translatorapp.presentation.language.LanguageSelectionFragment"
         android:label="fragment_language_selection"
         tools:layout="@layout/fragment_language_selection">
         <argument
@@ -49,7 +49,7 @@
     <!--  Destination for your Message Screen  -->
     <fragment
         android:id="@+id/messageFragment"
-        android:name="com.asadbyte.translatorapp.message.MessageFragment"
+        android:name="com.asadbyte.translatorapp.presentation.message.MessageFragment"
         android:label="fragment_message"
         tools:layout="@layout/fragment_message">
         <action
@@ -72,7 +72,7 @@
     <!--  Destination for your Settings Screen  -->
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.asadbyte.translatorapp.setting.SettingsFragment"
+        android:name="com.asadbyte.translatorapp.presentation.setting.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings">
         <action
@@ -89,7 +89,7 @@
     <!--  Destination for your BookMark Fragment  -->
     <fragment
         android:id="@+id/bookmarkFragment"
-        android:name="com.asadbyte.translatorapp.bookmark.BookmarkFragment"
+        android:name="com.asadbyte.translatorapp.presentation.bookmark.BookmarkFragment"
         android:label="fragment_bookmark"
         tools:layout="@layout/fragment_bookmark">
         <action
@@ -100,7 +100,7 @@
     <!--  Destination for your History Fragment  -->
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.asadbyte.translatorapp.history.HistoryFragment"
+        android:name="com.asadbyte.translatorapp.presentation.history.HistoryFragment"
         android:label="fragment_history"
         tools:layout="@layout/fragment_history">
         <action
@@ -112,7 +112,7 @@
     <!-- Destination for your Translation Fragment 1   -->
     <fragment
         android:id="@+id/translationFragment1"
-        android:name="com.asadbyte.translatorapp.translation.TranslationFragment1"
+        android:name="com.asadbyte.translatorapp.presentation.translation.TranslationFragment1"
         android:label="translation_fragment1"
         tools:layout="@layout/fragment_translation1"
         >
@@ -128,7 +128,7 @@
     <!-- Destination for your Translation Fragment 2   -->
     <fragment
         android:id="@+id/translationFragment2"
-        android:name="com.asadbyte.translatorapp.translation.TranslationFragment2"
+        android:name="com.asadbyte.translatorapp.presentation.translation.TranslationFragment2"
         android:label="translation_fragment2"
         tools:layout="@layout/fragment_translation2"
         >
@@ -143,7 +143,7 @@
     <!-- Destination for your Camera Home Fragment   -->
     <fragment
         android:id="@+id/cameraHomeFragment"
-        android:name="com.asadbyte.translatorapp.camera.CameraHomeFragment"
+        android:name="com.asadbyte.translatorapp.presentation.camera.CameraHomeFragment"
         android:label="camera_home_fragment"
         tools:layout="@layout/fragment_camera_home"
         >
@@ -159,7 +159,7 @@
     <!-- Destination for your Camera Crop Fragment   -->
     <fragment
         android:id="@+id/cameraCropFragment"
-        android:name="com.asadbyte.translatorapp.camera.CameraCropFragment"
+        android:name="com.asadbyte.translatorapp.presentation.camera.CameraCropFragment"
         android:label="fragment_camera_crop"
         tools:layout="@layout/fragment_camera_crop" >
         <argument
@@ -174,7 +174,7 @@
     <!-- Destination for your Camera Result Fragment   -->
     <fragment
         android:id="@+id/cameraResultFragment"
-        android:name="com.asadbyte.translatorapp.camera.CameraResultFragment"
+        android:name="com.asadbyte.translatorapp.presentation.camera.CameraResultFragment"
         android:label="fragment_camera_result"
         tools:layout="@layout/fragment_camera_result" >
         <argument
@@ -193,7 +193,7 @@
     <!-- Destination for your Camera Copy Fragment   -->
     <fragment
         android:id="@+id/cameraCopyFragment"
-        android:name="com.asadbyte.translatorapp.camera.CameraCopyFragment"
+        android:name="com.asadbyte.translatorapp.presentation.camera.CameraCopyFragment"
         android:label="fragment_camera_copy"
         tools:layout="@layout/fragment_camera_copy">
         <argument
