@@ -26,15 +26,11 @@ import androidx.core.app.NotificationCompat
 import com.asadbyte.translatorapp.R
 import com.asadbyte.translatorapp.data.TranslationApiModule
 import com.asadbyte.translatorapp.main.TranslatorApplication
-import com.google.mlkit.nl.translate.TranslateLanguage
-import com.google.mlkit.nl.translate.Translation
-import com.google.mlkit.nl.translate.TranslatorOptions
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -42,9 +38,13 @@ import kotlinx.coroutines.withContext
 
 class ScreenTranslatorService : Service() {
 
-    private val translationRepository = TranslationApiModule()
+    private val translateModule = ImageTranslateModule()
     private val overlayProcessor = ServiceOverlayProcessor()
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+
+    // Add consciousness to prevent translation loops
+    private var isCurrentlyTranslating = false
+    private var isOverlayVisible = false
 
     companion object {
         var isRunning = false
@@ -194,6 +194,12 @@ class ScreenTranslatorService : Service() {
     private fun onBubbleClicked() {
         Log.d("ScreenTranslatorService", "Bubble clicked")
 
+        // Prevent multiple simultaneous translations
+        if (isCurrentlyTranslating) {
+            Log.d("ScreenTranslatorService", "Already translating, ignoring click")
+            return
+        }
+
         if (!hasPermission || permissionData == null) {
             Log.d("ScreenTranslatorService", "No screen capture permission, requesting...")
             requestScreenCapturePermission()
@@ -202,6 +208,7 @@ class ScreenTranslatorService : Service() {
 
         Log.d("ScreenTranslatorService", "Hiding bubble and starting capture")
         floatingBubbleView.visibility = View.GONE
+        isCurrentlyTranslating = true
 
         if (mediaProjection == null) {
             Log.d("ScreenTranslatorService", "Creating new media projection")
@@ -213,7 +220,6 @@ class ScreenTranslatorService : Service() {
     }
 
     private fun captureScreen() {
-
         if (mediaProjection == null) {
             Log.e("ScreenTranslatorService", "MediaProjection is null")
             showBubbleAgain()
@@ -269,6 +275,14 @@ class ScreenTranslatorService : Service() {
     }
 
     private fun processAndShowOverlay(screenshot: Bitmap) {
+        // Don't process if overlay is already visible
+        if (isOverlayVisible) {
+            Log.d("ScreenTranslatorService", "Overlay already visible, resetting translation state")
+            isCurrentlyTranslating = false
+            showBubbleAgain()
+            return
+        }
+
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
         val image = InputImage.fromBitmap(screenshot, 0)
 
@@ -276,6 +290,7 @@ class ScreenTranslatorService : Service() {
             .addOnSuccessListener { visionText ->
                 if (visionText.text.isBlank()) {
                     Log.d("ScreenTranslatorService", "No text found on screen.")
+                    isCurrentlyTranslating = false
                     showBubbleAgain()
                     return@addOnSuccessListener
                 }
@@ -286,9 +301,10 @@ class ScreenTranslatorService : Service() {
 
                         for (block in visionText.textBlocks) {
                             try {
-                                val translatedText = translationRepository.translate(block.text, sourceLanguage, targetLanguage)
+                                // Use the new translate method that returns String?
+                                val translatedText = translateModule.translate(block.text, sourceLanguage, targetLanguage)
                                 if (translatedText != null && block.boundingBox != null) {
-                                    translatedBlocks.add(TranslatedTextBlock(translatedText.toString(), block.boundingBox!!))
+                                    translatedBlocks.add(TranslatedTextBlock(translatedText, block.boundingBox!!))
                                 }
                             } catch (e: Exception) {
                                 Log.e("ScreenTranslatorService", "Translation failed for block: ${block.text}", e)
@@ -299,17 +315,20 @@ class ScreenTranslatorService : Service() {
                         if (translatedBlocks.isEmpty()) {
                             Log.d("ScreenTranslatorService", "Translation resulted in no valid text blocks.")
                             withContext(Dispatchers.Main) {
+                                isCurrentlyTranslating = false
                                 showBubbleAgain()
                             }
                         } else {
                             val overlayBitmap = overlayProcessor.createOverlay(screenshot, translatedBlocks)
                             withContext(Dispatchers.Main) {
+                                isCurrentlyTranslating = false
                                 showOverlay(overlayBitmap)
                             }
                         }
                     } catch (e: Exception) {
                         Log.e("ScreenTranslatorService", "Error during translation", e)
                         withContext(Dispatchers.Main) {
+                            isCurrentlyTranslating = false
                             showBubbleAgain()
                         }
                     }
@@ -317,6 +336,7 @@ class ScreenTranslatorService : Service() {
             }
             .addOnFailureListener { e ->
                 Log.e("ScreenTranslatorService", "Text recognition failed", e)
+                isCurrentlyTranslating = false
                 showBubbleAgain()
             }
     }
@@ -352,6 +372,7 @@ class ScreenTranslatorService : Service() {
 
         try {
             windowManager.addView(overlayView, params)
+            isOverlayVisible = true  // Mark overlay as visible
 
             val overlayImageView = overlayView!!.findViewById<ImageView>(R.id.overlay_image_view)
             val closeButton = overlayView!!.findViewById<ImageView>(R.id.close_button)
@@ -377,6 +398,7 @@ class ScreenTranslatorService : Service() {
             }
         }
         overlayView = null
+        isOverlayVisible = false  // Mark overlay as hidden
         showBubbleAgain()
     }
 
@@ -390,6 +412,8 @@ class ScreenTranslatorService : Service() {
         super.onDestroy()
         Log.d("ScreenTranslatorService", "Service is being destroyed.")
         isRunning = false
+        isCurrentlyTranslating = false
+        isOverlayVisible = false
 
         // Cancel all coroutines
         serviceScope.cancel()
