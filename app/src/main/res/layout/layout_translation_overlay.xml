@@ -7,16 +7,16 @@
         android:id="@+id/overlay_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY" />
+        android:scaleType="matrix" />
 
     <ImageView
         android:id="@+id/close_button"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/ic_close"
         android:layout_gravity="top|end"
-        android:padding="8dp"
         android:layout_margin="16dp"
-        android:background="@drawable/circular_background" />
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_close"
+        android:contentDescription="Close" />
 
 </FrameLayout>

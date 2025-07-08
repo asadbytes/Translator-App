@@ -24,7 +24,11 @@ import android.view.WindowManager
 import android.widget.ImageView
 import androidx.core.app.NotificationCompat
 import com.asadbyte.translatorapp.R
+import com.asadbyte.translatorapp.data.TranslationApiModule
 import com.asadbyte.translatorapp.main.TranslatorApplication
+import com.google.mlkit.nl.translate.TranslateLanguage
+import com.google.mlkit.nl.translate.Translation
+import com.google.mlkit.nl.translate.TranslatorOptions
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -38,7 +42,7 @@ import kotlinx.coroutines.withContext
 
 class ScreenTranslatorService : Service() {
 
-    private val translationRepository = ServiceTranslationRepository()
+    private val translationRepository = TranslationApiModule()
     private val overlayProcessor = ServiceOverlayProcessor()
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -188,15 +192,19 @@ class ScreenTranslatorService : Service() {
     }
 
     private fun onBubbleClicked() {
+        Log.d("ScreenTranslatorService", "Bubble clicked")
+
         if (!hasPermission || permissionData == null) {
             Log.d("ScreenTranslatorService", "No screen capture permission, requesting...")
             requestScreenCapturePermission()
             return
         }
 
+        Log.d("ScreenTranslatorService", "Hiding bubble and starting capture")
         floatingBubbleView.visibility = View.GONE
 
         if (mediaProjection == null) {
+            Log.d("ScreenTranslatorService", "Creating new media projection")
             val mediaProjectionManager = getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
             mediaProjection = mediaProjectionManager.getMediaProjection(permissionResultCode, permissionData!!)
         }
@@ -205,6 +213,13 @@ class ScreenTranslatorService : Service() {
     }
 
     private fun captureScreen() {
+
+        if (mediaProjection == null) {
+            Log.e("ScreenTranslatorService", "MediaProjection is null")
+            showBubbleAgain()
+            return
+        }
+
         // Clean up previous resources
         virtualDisplay?.release()
         imageReader?.close()
@@ -214,15 +229,10 @@ class ScreenTranslatorService : Service() {
         val height = displayMetrics.heightPixels
 
         imageReader = ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 2)
-        virtualDisplay = mediaProjection?.createVirtualDisplay(
-            "ScreenCapture",
-            width, height, displayMetrics.densityDpi,
-            DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-            imageReader!!.surface, null, null
-        )
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            val image = imageReader?.acquireLatestImage()
+        // Set up image available listener BEFORE creating virtual display
+        imageReader!!.setOnImageAvailableListener({ reader ->
+            val image = reader.acquireLatestImage()
             if (image != null) {
                 try {
                     val planes = image.planes
@@ -248,7 +258,14 @@ class ScreenTranslatorService : Service() {
                 Log.e("ScreenTranslatorService", "Failed to acquire screen capture image.")
                 showBubbleAgain()
             }
-        }, 300)
+        }, Handler(Looper.getMainLooper()))
+
+        virtualDisplay = mediaProjection?.createVirtualDisplay(
+            "ScreenCapture",
+            width, height, displayMetrics.densityDpi,
+            DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
+            imageReader!!.surface, null, null
+        )
     }
 
     private fun processAndShowOverlay(screenshot: Bitmap) {
@@ -265,11 +282,17 @@ class ScreenTranslatorService : Service() {
 
                 serviceScope.launch(Dispatchers.IO) {
                     try {
-                        val translatedBlocks = visionText.textBlocks.mapNotNull { block ->
-                            translationRepository.translate(block.text, sourceLanguage, targetLanguage)?.let { translatedText ->
-                                block.boundingBox?.let { bounds ->
-                                    TranslatedTextBlock(translatedText, bounds)
+                        val translatedBlocks = mutableListOf<TranslatedTextBlock>()
+
+                        for (block in visionText.textBlocks) {
+                            try {
+                                val translatedText = translationRepository.translate(block.text, sourceLanguage, targetLanguage)
+                                if (translatedText != null && block.boundingBox != null) {
+                                    translatedBlocks.add(TranslatedTextBlock(translatedText.toString(), block.boundingBox!!))
                                 }
+                            } catch (e: Exception) {
+                                Log.e("ScreenTranslatorService", "Translation failed for block: ${block.text}", e)
+                                // Continue with other blocks even if one fails
                             }
                         }
 
@@ -316,9 +339,16 @@ class ScreenTranslatorService : Service() {
             WindowManager.LayoutParams.MATCH_PARENT,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
             else WindowManager.LayoutParams.TYPE_PHONE,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
             PixelFormat.TRANSLUCENT
         )
+
+        // Add these to ensure overlay appears on top
+        params.gravity = Gravity.TOP or Gravity.LEFT
+        params.x = 0
+        params.y = 0
 
         try {
             windowManager.addView(overlayView, params)
@@ -327,6 +357,7 @@ class ScreenTranslatorService : Service() {
             val closeButton = overlayView!!.findViewById<ImageView>(R.id.close_button)
 
             overlayImageView.setImageBitmap(bitmap)
+            overlayImageView.scaleType = ImageView.ScaleType.MATRIX // Ensure proper scaling
 
             closeButton.setOnClickListener {
                 hideOverlay()
