@@ -4,6 +4,6 @@ import android.graphics.Rect
 
 // In its own file: TranslatedTextBlock.kt
 data class TranslatedTextBlock(
-    val text: String,
-    val bounds: Rect
+    val translatedText: String,
+    val boundingBox: Rect
 )

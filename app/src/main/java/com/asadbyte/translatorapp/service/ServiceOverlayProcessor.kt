@@ -4,78 +4,92 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 
 class ServiceOverlayProcessor {
-    fun createOverlay(originalBitmap: Bitmap, translatedData: List<TranslatedTextBlock>): Bitmap {
-        // Create a mutable copy of the original bitmap
-        val overlayBitmap = originalBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+    fun createOverlay(screenshot: Bitmap, translatedBlocks: List<TranslatedTextBlock>): Bitmap {
+        val overlayBitmap = screenshot.copy(Bitmap.Config.ARGB_8888, true)
         val canvas = Canvas(overlayBitmap)
 
-        // Paint for the background rectangle (semi-transparent black)
-        val backgroundPaint = Paint().apply {
-            color = Color.argb(180, 0, 0, 0) // Semi-transparent black
-            style = Paint.Style.FILL
-        }
+        for (block in translatedBlocks) {
+            val rect = block.boundingBox
 
-        // Paint for the translated text
-        val textPaint = Paint().apply {
-            color = Color.WHITE
-            textSize = 32f // Increased text size for better visibility
-            textAlign = Paint.Align.CENTER
-            isAntiAlias = true
-            typeface = Typeface.DEFAULT_BOLD
-        }
+            // Calculate appropriate text size based on bounding box
+            val textSize = calculateTextSize(block.translatedText, rect)
 
-        // Paint for text stroke (outline)
-        val strokePaint = Paint().apply {
-            color = Color.BLACK
-            textSize = 32f
-            textAlign = Paint.Align.CENTER
-            isAntiAlias = true
-            style = Paint.Style.STROKE
-            strokeWidth = 3f
-            typeface = Typeface.DEFAULT_BOLD
-        }
+            // Setup paints with calculated text size
+            val backgroundPaint = Paint().apply {
+                isAntiAlias = true
+                style = Paint.Style.FILL
+                color = Color.argb(250, 255, 255, 255) // Almost opaque white
+            }
 
-        translatedData.forEach { block ->
-            val bounds = block.bounds
+            val textPaint = Paint().apply {
+                isAntiAlias = true
+                this.textSize = textSize
+                color = Color.BLACK
+                typeface = Typeface.DEFAULT_BOLD
+            }
 
-            // Add some padding to the rectangle
+            val strokePaint = Paint().apply {
+                isAntiAlias = true
+                this.textSize = textSize
+                color = Color.WHITE
+                typeface = Typeface.DEFAULT_BOLD
+                style = Paint.Style.STROKE
+                strokeWidth = 2f
+            }
+
+            // Create background box with some padding
             val padding = 8f
-            val expandedBounds = RectF(
-                bounds.left - padding,
-                bounds.top - padding,
-                bounds.right + padding,
-                bounds.bottom + padding
+            val backgroundRect = RectF(
+                rect.left.toFloat() - padding,
+                rect.top.toFloat() - padding,
+                rect.right.toFloat() + padding,
+                rect.bottom.toFloat() + padding
             )
 
-            // Draw rounded rectangle background
-            canvas.drawRoundRect(expandedBounds, 8f, 8f, backgroundPaint)
+            // Draw background to hide original text
+            canvas.drawRoundRect(backgroundRect, 8f, 8f, backgroundPaint)
 
-            // Calculate text position
-            val centerX = bounds.centerX().toFloat()
-            val centerY = bounds.centerY().toFloat()
+            // Draw translated text
+            val textBounds = Rect()
+            textPaint.getTextBounds(block.translatedText, 0, block.translatedText.length, textBounds)
 
-            // Handle multi-line text if needed
-            val lines = splitTextToFitWidth(block.text, textPaint, bounds.width())
-            val lineHeight = textPaint.textSize + 4f
-            val totalHeight = lines.size * lineHeight
-            val startY = centerY - totalHeight / 2 + lineHeight / 2
+            val textX = rect.left.toFloat() + (rect.width() - textBounds.width()) / 2f
+            val textY = rect.top.toFloat() + (rect.height() + textBounds.height()) / 2f
 
-            lines.forEachIndexed { index, line ->
-                val y = startY + index * lineHeight
-
-                // Draw text stroke first (outline)
-                canvas.drawText(line, centerX, y, strokePaint)
-
-                // Draw the actual text
-                canvas.drawText(line, centerX, y, textPaint)
-            }
+            // Draw text with stroke for better visibility
+            canvas.drawText(block.translatedText, textX, textY, strokePaint)
+            canvas.drawText(block.translatedText, textX, textY, textPaint)
         }
 
         return overlayBitmap
+    }
+
+    private fun calculateTextSize(text: String, rect: Rect): Float {
+        val maxWidth = rect.width().toFloat() * 0.9f // Leave some margin
+        val maxHeight = rect.height().toFloat() * 0.8f // Leave some margin
+
+        val paint = Paint()
+        var textSize = 12f
+        val maxTextSize = 48f
+
+        while (textSize < maxTextSize) {
+            paint.textSize = textSize
+            val textBounds = Rect()
+            paint.getTextBounds(text, 0, text.length, textBounds)
+
+            if (textBounds.width() > maxWidth || textBounds.height() > maxHeight) {
+                break
+            }
+            textSize += 2f
+        }
+
+        return maxOf(12f, textSize - 2f) // Ensure minimum readable size
     }
 
     private fun splitTextToFitWidth(text: String, paint: Paint, maxWidth: Int): List<String> {
