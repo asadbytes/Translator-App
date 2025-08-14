@@ -18,13 +18,31 @@ A versatile and feature-rich translator application for Android, designed to bre
 
 ## 📸 Screenshots
 
-| Home Screen                                     | Camera Translation                                | Conversation Mode                               |
-| ----------------------------------------------- | ------------------------------------------------- | ----------------------------------------------- |
-| <img src="https://placehold.co/250x500/FFFFFF/000000?text=Home+Screen" alt="Home Screen"> | <img src="https://placehold.co/250x500/FFFFFF/000000?text=Camera+Screen" alt="Camera Translation"> | <img src="https://placehold.co/250x500/FFFFFF/000000?text=Conversation+Screen" alt="Conversation Mode"> |
+### Main Features
 
-| History                                         | Bookmarks                                       | Language Selection                              |
-| ----------------------------------------------- | ----------------------------------------------- | ----------------------------------------------- |
-| <img src="https://placehold.co/250x500/FFFFFF/000000?text=History+Screen" alt="History">   | <img src="https://placehold.co/250x500/FFFFFF/000000?text=Bookmarks+Screen" alt="Bookmarks"> | <img src="https://placehold.co/250x500/FFFFFF/000000?text=Language+Select" alt="Language Selection"> |
+| Home Screen                                       | Conversation                                          | Translation Result                                    |
+| ------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- |
+| <img src="screenshots/home_screen.jpg" width="250"> | <img src="screenshots/conversation_screen.jpg" width="250"> | <img src="screenshots/translation_result.jpg" width="250"> |
+
+| History                                          | Bookmarks                                         | Settings                                          |
+| ------------------------------------------------ | ------------------------------------------------- | ------------------------------------------------- |
+| <img src="screenshots/history_screen.jpg" width="250"> | <img src="screenshots/bookmark_screen.jpg" width="250"> | <img src="screenshots/settings_screen.jpg" width="250"> |
+
+### Camera & Image Translation
+
+| Live Camera                                        | Crop Screen                                     | Original Image                                       |
+| -------------------------------------------------- | ----------------------------------------------- | ---------------------------------------------------- |
+| <img src="screenshots/live_camera_screen.jpg" width="250"> | <img src="screenshots/crop_screen.jpg" width="250"> | <img src="screenshots/original_image_screen.jpg" width="250"> |
+
+| Translated Image                                     |
+| ---------------------------------------------------- |
+| <img src="screenshots/translated_image_screen.jpg" width="250"> |
+
+### Floating Widget Service
+
+| Original Text Service                              | Translated Text Service                              |
+| -------------------------------------------------- | ---------------------------------------------------- |
+| <img src="screenshots/original_service.jpg" width="250"> | <img src="screenshots/translated_service.jpg" width="250"> |
 
 ## 🛠️ Technologies Used
 
